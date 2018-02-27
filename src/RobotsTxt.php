@@ -25,7 +25,29 @@ class RobotsTxt
 
     public function isAllowed(string $url, ?string $userAgent = '*'): bool
     {
-        return ! isset($this->content[$userAgent][$url]);
+        $rules = $this->content[$userAgent] ?? [];
+
+        $isMatchingRule = false;
+
+        reset($rules);
+
+        while (! $isMatchingRule && $rule = current($rules)) {
+            $isMatchingRule = $rule === $url;
+
+            if ($isMatchingRule) {
+                break;
+            }
+
+            if (! $this->isDirectory($rule)) {
+                continue;
+            }
+
+            $isMatchingRule = $this->isUrlInDirectory($url, $rule);
+
+            next($rules);
+        }
+
+        return ! $isMatchingRule;
     }
 
     private function parseContent(string $content): array
@@ -85,5 +107,15 @@ class RobotsTxt
     private function parseDisallow(string $line): string
     {
         return trim(str_replace('Disallow', '', trim($line)), ': ');
+    }
+
+    private function isDirectory(string $path): bool
+    {
+        return substr($path, strlen($path) - 1, 1) === '/';
+    }
+
+    private function isUrlInDirectory(string $url, string $path): bool
+    {
+        return strpos($url, $path) === 0;
     }
 }

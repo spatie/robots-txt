@@ -44,7 +44,7 @@ class RobotsTxtTest extends TestCase
     {
         $robots = RobotsTxt::readFrom(__DIR__ . '/data/robots.txt');
 
-        $this->assertTrue($robots->isAllowed('/test', 'google'));
+        $this->assertFalse($robots->isAllowed('/test', 'google'));
     }
 
     /** @test */
