@@ -19,8 +19,17 @@ composer require spatie/robots-txt
 ## Usage
 
 ``` php
-$skeleton = new Spatie\Skeleton();
-echo $skeleton->echoPhrase('Hello, Spatie!');
+$robots = Robots::create(__DIR__ . '/data/robots.txt');
+
+$robots->isAllowed('/admin');
+
+$robots->mayFollow('/page-with-no-follow');
+```
+
+You can also specify a user agent:
+
+``` php
+$robots = Robots::create(__DIR__ . '/data/robots.txt', 'UserAgent007');
 ```
 
 ### Testing
