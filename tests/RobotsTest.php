@@ -12,7 +12,7 @@ class RobotsTest extends TestCase
     {
         $robots = Robots::create(__DIR__ . '/data/robots.txt');
 
-        $this->assertTrue($robots->isAllowed('/'));
+        $this->assertTrue($robots->allows('/'));
     }
 
     /** @test */
@@ -20,7 +20,7 @@ class RobotsTest extends TestCase
     {
         $robots = Robots::create(__DIR__ . '/data/robots.txt', 'google');
 
-        $this->assertFalse($robots->isAllowed('/'));
+        $this->assertFalse($robots->allows('/'));
     }
 
     /** @test */
@@ -28,7 +28,7 @@ class RobotsTest extends TestCase
     {
         $robots = Robots::create(__DIR__ . '/data/robots.txt');
 
-        $this->assertFalse($robots->isAllowed('/', 'google'));
+        $this->assertFalse($robots->allows('/', 'google'));
     }
 
     /** @test */

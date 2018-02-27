@@ -21,7 +21,7 @@ composer require spatie/robots-txt
 ``` php
 $robots = Robots::create(__DIR__ . '/data/robots.txt');
 
-$robots->isAllowed('/admin');
+$robots->allows('/admin');
 
 $robots->mayFollowOn('/page-with-no-follow');
 ```

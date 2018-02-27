@@ -23,7 +23,7 @@ class RobotsTxt
         return new self($content);
     }
 
-    public function isAllowed(string $url, ?string $userAgent = '*'): bool
+    public function allows(string $url, ?string $userAgent = '*'): bool
     {
         $rules = $this->content[$userAgent] ?? [];
 

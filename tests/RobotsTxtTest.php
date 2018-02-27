@@ -28,7 +28,7 @@ class RobotsTxtTest extends TestCase
     {
         $robots = RobotsTxt::readFrom(__DIR__ . '/data/robots.txt');
 
-        $this->assertTrue($robots->isAllowed('/'));
+        $this->assertTrue($robots->allows('/'));
     }
 
     /** @test */
@@ -36,7 +36,7 @@ class RobotsTxtTest extends TestCase
     {
         $robots = RobotsTxt::readFrom(__DIR__ . '/data/robots.txt');
 
-        $this->assertFalse($robots->isAllowed('/en/admin/'));
+        $this->assertFalse($robots->allows('/en/admin/'));
     }
 
     /** @test */
@@ -44,7 +44,7 @@ class RobotsTxtTest extends TestCase
     {
         $robots = RobotsTxt::readFrom(__DIR__ . '/data/robots.txt');
 
-        $this->assertFalse($robots->isAllowed('/test', 'google'));
+        $this->assertFalse($robots->allows('/test', 'google'));
     }
 
     /** @test */
@@ -52,6 +52,6 @@ class RobotsTxtTest extends TestCase
     {
         $robots = RobotsTxt::readFrom(__DIR__ . '/data/robots.txt');
 
-        $this->assertFalse($robots->isAllowed('/', 'google'));
+        $this->assertFalse($robots->allows('/', 'google'));
     }
 }

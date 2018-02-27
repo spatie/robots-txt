@@ -18,12 +18,12 @@ class Robots
         return new self($source, $userAgent);
     }
 
-    public function isAllowed(string $url, ?string $userAgent = null): bool
+    public function allows(string $url, ?string $userAgent = null): bool
     {
         $userAgent = $userAgent ?? $this->userAgent;
 
         return
-            $this->robotsTxt->isAllowed($url, $userAgent)
+            $this->robotsTxt->allows($url, $userAgent)
             && RobotsMeta::readFrom($url)->mayIndex();
     }
 
