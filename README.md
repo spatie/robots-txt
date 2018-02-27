@@ -23,7 +23,7 @@ $robots = Robots::create(__DIR__ . '/data/robots.txt');
 
 $robots->isAllowed('/admin');
 
-$robots->mayFollow('/page-with-no-follow');
+$robots->mayFollowOn('/page-with-no-follow');
 ```
 
 You can also specify a user agent:

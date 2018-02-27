@@ -36,6 +36,6 @@ class RobotsTest extends TestCase
     {
         $robots = Robots::create(__DIR__ . '/data/robots.txt');
 
-        $this->assertFalse($robots->mayFollow(__DIR__ . '/data/noindex-nofollow.html'));
+        $this->assertFalse($robots->mayFollowOn(__DIR__ . '/data/noindex-nofollow.html'));
     }
 }

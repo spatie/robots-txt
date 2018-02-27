@@ -27,7 +27,7 @@ class Robots
             && RobotsMeta::readFrom($url)->mayIndex();
     }
 
-    public function mayFollow(string $url): bool
+    public function mayFollowOn(string $url): bool
     {
         return RobotsMeta::readFrom($url)->mayFollow();
     }
