@@ -19,6 +19,13 @@ class Robots
             : null;
     }
 
+    public function withTxt(string $source): self
+    {
+        $this->robotsTxt = RobotsTxt::readFrom($source);
+
+        return $this;
+    }
+
     public static function create(?string $userAgent = null, ?string $source = null): self
     {
         return new self($userAgent, $source);

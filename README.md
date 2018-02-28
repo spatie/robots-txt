@@ -36,9 +36,11 @@ By default, `Robots` will look for a `robots.txt` file on `https://host.com/robo
 Another location can be specified like so:
 
 ``` php
-$robots = Robots::create(null, 'https://www.spatie.be/robots-custom.txt');
+$robots = Robots::create()
+    ->withTxt('https://www.spatie.be/robots-custom.txt');
 
-$robots = Robots::create(null, __DIR__ . '/public/robots.txt');
+$robots = Robots::create()
+    ->withTxt(__DIR__ . '/public/robots.txt');
 ```
 
 ### Testing
