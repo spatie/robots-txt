@@ -2,6 +2,8 @@
 
 namespace Spatie\Robots;
 
+use InvalidArgumentException;
+
 class RobotsMeta
 {
     private $content;
@@ -13,14 +15,18 @@ class RobotsMeta
 
     public static function readFrom(string $source): self
     {
-        $content = file_get_contents($source);
+        $content = @file_get_contents($source);
+
+        if ($content === null) {
+            throw new InvalidArgumentException("Could not read from source {$source}");
+        }
 
         return new self($content);
     }
 
-    public static function create(string $content): self
+    public static function create(string $source): self
     {
-        return new self($content);
+        return new self($source);
     }
 
     public function mayIndex(): bool

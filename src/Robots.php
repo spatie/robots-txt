@@ -4,31 +4,46 @@ namespace Spatie\Robots;
 
 class Robots
 {
-    private $robotsTxt;
+    /** @var null|string */
     private $userAgent;
 
-    public function __construct(string $source, ?string $userAgent = null)
+    /** @var null|\Spatie\Robots\RobotsTxt */
+    private $robotsTxt;
+
+    public function __construct(?string $userAgent = null, ?string $source = null)
     {
-        $this->robotsTxt = RobotsTxt::readFrom($source);
         $this->userAgent = $userAgent;
+
+        $this->robotsTxt = $source
+            ? RobotsTxt::readFrom($source)
+            : null;
     }
 
-    public static function create(string $source, ?string $userAgent = null): self
+    public static function create(?string $userAgent = null, ?string $source = null): self
     {
-        return new self($source, $userAgent);
+        return new self($userAgent, $source);
     }
 
     public function allows(string $url, ?string $userAgent = null): bool
     {
         $userAgent = $userAgent ?? $this->userAgent;
 
+        $robotsTxt =
+            $this->robotsTxt
+            ?? RobotsTxt::create($this->createRobotsUrl($url));
+
         return
-            $this->robotsTxt->allows($url, $userAgent)
+            $robotsTxt->allows($url, $userAgent)
             && RobotsMeta::readFrom($url)->mayIndex();
     }
 
     public function mayFollowOn(string $url): bool
     {
         return RobotsMeta::readFrom($url)->mayFollow();
+    }
+
+    private function createRobotsUrl(string $url): string
+    {
+        return parse_url($url, PHP_URL_SCHEME) . '://' . parse_url($url, PHP_URL_HOST) . '/robots.txt';
     }
 }

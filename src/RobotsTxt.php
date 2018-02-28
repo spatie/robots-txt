@@ -2,6 +2,8 @@
 
 namespace Spatie\Robots;
 
+use InvalidArgumentException;
+
 class RobotsTxt
 {
     private $content;
@@ -13,26 +15,39 @@ class RobotsTxt
 
     public static function readFrom(string $source): self
     {
-        $content = file_get_contents($source);
+        $content = @file_get_contents($source);
+
+        if (! $content) {
+            throw new InvalidArgumentException("Could not read source from {$source}");
+        }
 
         return new self($content);
     }
 
-    public static function create(string $content): self
+    public static function create(string $source): self
     {
-        return new self($content);
+        if (
+            strpos($source, 'http') !== false
+            && strpos($source, 'robots.txt') !== false
+        ) {
+            return self::readFrom($source);
+        }
+
+        return new self($source);
     }
 
     public function allows(string $url, ?string $userAgent = '*'): bool
     {
-        $rules = $this->content[$userAgent] ?? [];
+        $path = parse_url($url, PHP_URL_PATH);
+
+        $rules = $this->content[$userAgent] ?? $this->content['*'] ?? [];
 
         $isMatchingRule = false;
 
         reset($rules);
 
         while (! $isMatchingRule && $rule = current($rules)) {
-            $isMatchingRule = $rule === $url;
+            $isMatchingRule = $rule === $path;
 
             if ($isMatchingRule) {
                 break;
@@ -42,7 +57,7 @@ class RobotsTxt
                 continue;
             }
 
-            $isMatchingRule = $this->isUrlInDirectory($url, $rule);
+            $isMatchingRule = $this->isUrlInDirectory($path, $rule);
 
             next($rules);
         }
