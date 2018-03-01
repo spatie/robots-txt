@@ -5,10 +5,10 @@ namespace Spatie\Robots;
 class Robots
 {
     /** @var null|string */
-    private $userAgent;
+    protected $userAgent;
 
     /** @var null|\Spatie\Robots\RobotsTxt */
-    private $robotsTxt;
+    protected $robotsTxt;
 
     public function __construct(?string $userAgent = null, ?string $source = null)
     {
@@ -52,7 +52,7 @@ class Robots
             && RobotsHeaders::readFrom($url)->mayFollow();
     }
 
-    private function createRobotsUrl(string $url): string
+    protected function createRobotsUrl(string $url): string
     {
         $robotsUrl = parse_url($url, PHP_URL_SCHEME) . '://' . parse_url($url, PHP_URL_HOST);
 

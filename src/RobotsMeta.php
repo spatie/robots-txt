@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 class RobotsMeta
 {
-    private $content;
+    protected $content;
 
     public function __construct(string $content)
     {
@@ -49,7 +49,7 @@ class RobotsMeta
         return $this->content['nofollow'] ?? false;
     }
 
-    private function parseContent(string $content): array
+    protected function parseContent(string $content): array
     {
         $lines = explode(PHP_EOL, $content);
 

@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 class RobotsTxt
 {
-    private $content;
+    protected $content;
 
     public function __construct(string $content)
     {
@@ -67,7 +67,7 @@ class RobotsTxt
         return ! $isMatchingRule;
     }
 
-    private function parseContent(string $content): array
+    protected function parseContent(string $content): array
     {
         $lines = explode(PHP_EOL, $content);
 
@@ -106,32 +106,32 @@ class RobotsTxt
         return $parsed;
     }
 
-    private function isCommentLine(string $line): bool
+    protected function isCommentLine(string $line): bool
     {
         return strpos(trim($line), '#') === 0;
     }
 
-    private function isUserAgentLine(string $line): bool
+    protected function isUserAgentLine(string $line): bool
     {
         return strpos(trim($line), 'User-agent') === 0;
     }
 
-    private function parseUserAgent(string $line): string
+    protected function parseUserAgent(string $line): string
     {
         return trim(str_replace('User-agent', '', trim($line)), ': ');
     }
 
-    private function parseDisallow(string $line): string
+    protected function parseDisallow(string $line): string
     {
         return trim(str_replace('Disallow', '', trim($line)), ': ');
     }
 
-    private function isDirectory(string $path): bool
+    protected function isDirectory(string $path): bool
     {
         return substr($path, strlen($path) - 1, 1) === '/';
     }
 
-    private function isUrlInDirectory(string $url, string $path): bool
+    protected function isUrlInDirectory(string $url, string $path): bool
     {
         return strpos($url, $path) === 0;
     }

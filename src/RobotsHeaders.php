@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 class RobotsHeaders
 {
-    private $content;
+    protected $content;
 
     public function __construct(array $headers)
     {
@@ -49,7 +49,7 @@ class RobotsHeaders
         return $this->content[$userAgent]['nofollow'] ?? false;
     }
 
-    private function parseHeaders(array $headers): array
+    protected function parseHeaders(array $headers): array
     {
         $content = [];
 
