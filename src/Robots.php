@@ -41,12 +41,15 @@ class Robots
 
         return
             $robotsTxt->allows($url, $userAgent)
-            && RobotsMeta::readFrom($url)->mayIndex();
+            && RobotsMeta::readFrom($url)->mayIndex()
+            && RobotsHeaders::readFrom($url)->mayIndex();
     }
 
     public function mayFollowOn(string $url): bool
     {
-        return RobotsMeta::readFrom($url)->mayFollow();
+        return
+            RobotsMeta::readFrom($url)->mayFollow()
+            && RobotsHeaders::readFrom($url)->mayFollow();
     }
 
     private function createRobotsUrl(string $url): string
