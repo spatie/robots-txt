@@ -21,9 +21,9 @@ composer require spatie/robots-txt
 ``` php
 $robots = Robots::create();
 
-$robots->allows('https://www.spatie.be/nl/admin/');
+$robots->allows('https://www.spatie.be/nl/admin');
 
-$robots->mayFollowOn('https://www.spatie.be/nl/admin/');
+$robots->mayFollowOn('https://www.spatie.be/nl/admin');
 ```
 
 You can also specify a user agent:

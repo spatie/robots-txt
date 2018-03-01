@@ -48,6 +48,8 @@ class RobotsTest extends TestCase
     {
         $robots = Robots::create();
 
+        $this->assertFalse($robots->allows('https://www.spatie.be/nl/admin'));
+
         $this->assertFalse($robots->allows('https://www.spatie.be/nl/admin/'));
 
         $this->assertTrue($robots->allows('https://www.spatie.be/nl'));

@@ -47,7 +47,9 @@ class RobotsTxt
         reset($rules);
 
         while (! $isMatchingRule && $rule = current($rules)) {
-            $isMatchingRule = $rule === $path;
+            $trimmedRule = rtrim($rule, '/');
+
+            $isMatchingRule = in_array($path, [$rule, $trimmedRule]);
 
             if ($isMatchingRule) {
                 break;
