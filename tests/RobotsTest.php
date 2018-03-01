@@ -1,8 +1,7 @@
 <?php
 
-namespace Tests\Spatie\Robots;
+namespace Spatie\Robots\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Spatie\Robots\Robots;
 
 class RobotsTest extends TestCase
@@ -13,7 +12,7 @@ class RobotsTest extends TestCase
         $robots = Robots::create()
             ->withTxt(__DIR__ . '/data/robots.txt');
 
-        $this->assertTrue($robots->allows('/'));
+        $this->assertTrue($robots->mayIndex('/'));
     }
 
     /** @test */
@@ -22,7 +21,7 @@ class RobotsTest extends TestCase
         $robots = Robots::create('google')
             ->withTxt(__DIR__ . '/data/robots.txt');
 
-        $this->assertFalse($robots->allows('/'));
+        $this->assertFalse($robots->mayIndex('/'));
     }
 
     /** @test */
@@ -31,7 +30,7 @@ class RobotsTest extends TestCase
         $robots = Robots::create()
             ->withTxt(__DIR__ . '/data/robots.txt');
 
-        $this->assertFalse($robots->allows('/', 'google'));
+        $this->assertFalse($robots->mayIndex('/', 'google'));
     }
 
     /** @test */
@@ -48,10 +47,10 @@ class RobotsTest extends TestCase
     {
         $robots = Robots::create();
 
-        $this->assertFalse($robots->allows('https://www.spatie.be/nl/admin'));
+        $this->assertFalse($robots->mayIndex($this->getLocalServerUrl('/nl/admin')));
 
-        $this->assertFalse($robots->allows('https://www.spatie.be/nl/admin/'));
+        $this->assertFalse($robots->mayIndex($this->getLocalServerUrl('/nl/admin/')));
 
-        $this->assertTrue($robots->allows('https://www.spatie.be/nl'));
+        $this->assertTrue($robots->mayIndex($this->getLocalServerUrl('/nl')));
     }
 }

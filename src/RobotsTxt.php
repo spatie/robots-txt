@@ -17,7 +17,7 @@ class RobotsTxt
     {
         $content = @file_get_contents($source);
 
-        if (! $content) {
+        if ($content === false) {
             throw new InvalidArgumentException("Could not read source from {$source}");
         }
 

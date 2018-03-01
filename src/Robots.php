@@ -31,7 +31,7 @@ class Robots
         return new self($userAgent, $source);
     }
 
-    public function allows(string $url, ?string $userAgent = null): bool
+    public function mayIndex(string $url, ?string $userAgent = null): bool
     {
         $userAgent = $userAgent ?? $this->userAgent;
 
@@ -54,6 +54,12 @@ class Robots
 
     private function createRobotsUrl(string $url): string
     {
-        return parse_url($url, PHP_URL_SCHEME) . '://' . parse_url($url, PHP_URL_HOST) . '/robots.txt';
+        $robotsUrl = parse_url($url, PHP_URL_SCHEME) . '://' . parse_url($url, PHP_URL_HOST);
+
+        if ($port = parse_url($url, PHP_URL_PORT)) {
+            $robotsUrl .= ":{$port}";
+        }
+
+        return "{$robotsUrl}/robots.txt";
     }
 }

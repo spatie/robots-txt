@@ -17,7 +17,7 @@ class RobotsHeaders
     {
         $content = @file_get_contents($source);
 
-        if ($content === null) {
+        if ($content === false) {
             throw new InvalidArgumentException("Could not read from source {$source}");
         }
 

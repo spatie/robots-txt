@@ -1,9 +1,8 @@
 <?php
 
-namespace Tests\Spatie\Robots;
+namespace Spatie\Robots\Tests;
 
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
 use Spatie\Robots\RobotsHeaders;
 
 class RobotsHeadersTest extends TestCase
@@ -28,7 +27,7 @@ class RobotsHeadersTest extends TestCase
     public function it_can_read_response_headers_from_a_server()
     {
         try {
-            $robots = RobotsHeaders::readFrom('http://localhost:4020/nofollow');
+            $robots = RobotsHeaders::readFrom($this->getLocalServerUrl('/nofollow'));
 
             $this->assertTrue($robots->mayIndex());
             $this->assertFalse($robots->mayFollow());
@@ -41,7 +40,7 @@ class RobotsHeadersTest extends TestCase
     public function it_can_read_response_headers_from_a_server_for_a_user_agent()
     {
         try {
-            $robots = RobotsHeaders::readFrom('http://localhost:4020/nofollow-noindex-google');
+            $robots = RobotsHeaders::readFrom($this->getLocalServerUrl('/nofollow-noindex-google'));
 
             $this->assertFalse($robots->mayIndex('google'));
             $this->assertFalse($robots->mayFollow('google'));

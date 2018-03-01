@@ -21,7 +21,7 @@ composer require spatie/robots-txt
 ``` php
 $robots = Robots::create();
 
-$robots->allows('https://www.spatie.be/nl/admin');
+$robots->mayIndex('https://www.spatie.be/nl/admin');
 
 $robots->mayFollowOn('https://www.spatie.be/nl/admin');
 ```

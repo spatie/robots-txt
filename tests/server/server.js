@@ -26,6 +26,29 @@ app.get('/nofollow-noindex-google', function (req, res) {
     res.end();
 });
 
+app.get('/robots.txt', function (req, res) {
+    console.log('Request at /robots.txt');
+
+    const content = `# robotstxt.org/
+
+User-agent: *
+
+Disallow: /nl/admin/
+Disallow: /en/admin/`;
+
+    res.writeHead(200);
+
+    res.end(content);
+});
+
+app.get('/nl', function (req, res) {
+    console.log('Request at /nl');
+
+    res.writeHead(200);
+
+    res.end();
+});
+
 var server = app.listen(4020, function () {
     var host = 'localhost';
     var port = server.address().port;
