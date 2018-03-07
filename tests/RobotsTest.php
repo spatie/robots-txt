@@ -2,7 +2,6 @@
 
 namespace Spatie\Robots\Tests;
 
-use InvalidArgumentException;
 use Spatie\Robots\Robots;
 
 class RobotsTest extends TestCase

@@ -1,8 +1,7 @@
 <?php
 
-namespace Spatie\Robots\Test;
+namespace Spatie\Robots\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Spatie\Robots\RobotsMeta;
 
 class RobotsMetaTest extends TestCase
