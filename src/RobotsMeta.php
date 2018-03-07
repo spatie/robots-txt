@@ -6,22 +6,22 @@ use InvalidArgumentException;
 
 class RobotsMeta
 {
-    protected $content;
-
-    public function __construct(string $content)
-    {
-        $this->content = $this->parseContent($content);
-    }
+    protected $robotsMetaTagProperties = [];
 
     public static function readFrom(string $source): self
     {
         $content = @file_get_contents($source);
 
         if ($content === false) {
-            throw new InvalidArgumentException("Could not read from source {$source}");
+            throw new InvalidArgumentException("Could not read from source `{$source}`");
         }
 
         return new self($content);
+    }
+
+    public function __construct(string $html)
+    {
+        $this->robotsMetaTagProperties = $this->findRobotsMetaTagProperties($html);
     }
 
     public static function create(string $source): self
@@ -41,40 +41,39 @@ class RobotsMeta
 
     public function noindex(): bool
     {
-        return $this->content['noindex'] ?? false;
+        return $this->robotsMetaTagProperties['noindex'] ?? false;
     }
 
     public function nofollow(): bool
     {
-        return $this->content['nofollow'] ?? false;
+        return $this->robotsMetaTagProperties['nofollow'] ?? false;
     }
 
-    protected function parseContent(string $content): array
+    protected function findRobotsMetaTagProperties(string $html): array
     {
-        $lines = explode(PHP_EOL, $content);
-
-        $meta = null;
-
-        reset($lines);
-
-        while (!$meta && $line = current($lines)) {
-            if (strpos(strtolower($line), '<meta name="robots"') === false) {
-                next($lines);
-
-                continue;
-            }
-
-            $meta = $line;
-        }
+        $metaTagLine = $this->findRobotsMetaTagLine($html);
 
         return [
-            'noindex' => $meta
-                ? strpos(strtolower($meta), 'noindex') !== false
+            'noindex' => $metaTagLine
+                ? strpos(strtolower($metaTagLine), 'noindex') !== false
                 : false,
 
-            'nofollow' => $meta
-                ? strpos(strtolower($meta), 'nofollow') !== false
+            'nofollow' => $metaTagLine
+                ? strpos(strtolower($metaTagLine), 'nofollow') !== false
                 : false,
         ];
+    }
+
+    protected function findRobotsMetaTagLine(string $html): ?string
+    {
+        $lines = explode(PHP_EOL, $html);
+
+        foreach($lines as $line) {
+            if (strpos(strtolower(trim($line)), '<meta name="robots"') === 0) {
+                return $line;
+            }
+        }
+
+        return null;
     }
 }

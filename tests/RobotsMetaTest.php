@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Spatie\Robots;
+namespace Spatie\Robots\Test;
 
 use PHPUnit\Framework\TestCase;
 use Spatie\Robots\RobotsMeta;
