@@ -17,7 +17,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             return;
         }
 
-        $this->markTestSkipped("The test server is not running. Start in by running `tests/server/start_server.sh`.");
+        $this->markTestSkipped("The test server is not running. Start it by running `tests/server/start_server.sh`.");
     }
 
     protected function localTestServerIsRunning(): bool
