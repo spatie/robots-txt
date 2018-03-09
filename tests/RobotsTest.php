@@ -10,7 +10,7 @@ class RobotsTest extends TestCase
     public function test()
     {
         $robots = Robots::create()
-            ->withTxt(__DIR__ . '/data/robots.txt');
+            ->withTxt(__DIR__.'/data/robots.txt');
 
         $this->assertTrue($robots->mayIndex('/'));
     }
@@ -19,7 +19,7 @@ class RobotsTest extends TestCase
     public function with_custom_user_agent_in_construct()
     {
         $robots = Robots::create('google')
-            ->withTxt(__DIR__ . '/data/robots.txt');
+            ->withTxt(__DIR__.'/data/robots.txt');
 
         $this->assertFalse($robots->mayIndex('/'));
     }
@@ -28,7 +28,7 @@ class RobotsTest extends TestCase
     public function with_custom_user_agent_in_method_call()
     {
         $robots = Robots::create()
-            ->withTxt(__DIR__ . '/data/robots.txt');
+            ->withTxt(__DIR__.'/data/robots.txt');
 
         $this->assertFalse($robots->mayIndex('/', 'google'));
     }
@@ -37,9 +37,9 @@ class RobotsTest extends TestCase
     public function test_may_follow()
     {
         $robots = Robots::create()
-            ->withTxt(__DIR__ . '/data/robots.txt');
+            ->withTxt(__DIR__.'/data/robots.txt');
 
-        $this->assertFalse($robots->mayFollowOn(__DIR__ . '/data/noindex-nofollow.html'));
+        $this->assertFalse($robots->mayFollowOn(__DIR__.'/data/noindex-nofollow.html'));
     }
 
     /** @test */

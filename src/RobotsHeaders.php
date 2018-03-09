@@ -53,7 +53,7 @@ class RobotsHeaders
     {
         $robotHeadders = $this->filterRobotHeaders($headers);
 
-        return array_reduce($robotHeadders, function(array $parsedHeaders, string $header) {
+        return array_reduce($robotHeadders, function (array $parsedHeaders, string $header) {
             $headerParts = explode(':', $header);
 
             $userAgent = count($headerParts) === 3
@@ -68,13 +68,12 @@ class RobotsHeaders
             ];
 
             return $parsedHeaders;
-
         }, []);
     }
 
     protected function filterRobotHeaders(array $headers): array
     {
-        return array_filter($headers, function(string $header) {
+        return array_filter($headers, function (string $header) {
             return strpos(strtolower($header), 'x-robots-tag') === 0;
         });
     }

@@ -47,14 +47,14 @@ class RobotsTxt
 
     protected function pathIsDenied(string $path, array $disallows): bool
     {
-        foreach($disallows as $disallow) {
+        foreach ($disallows as $disallow) {
             $trimmedDisallow = rtrim($disallow, '/');
 
             if (in_array($path, [$disallow, $trimmedDisallow])) {
                 return true;
             }
 
-            if (!$this->concernsDirectory($disallow)) {
+            if (! $this->concernsDirectory($disallow)) {
                 continue;
             }
 
