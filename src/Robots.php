@@ -52,7 +52,7 @@ class Robots
 
     protected function createRobotsUrl(string $url): string
     {
-        $robotsUrl = parse_url($url, PHP_URL_SCHEME) . '://' . parse_url($url, PHP_URL_HOST);
+        $robotsUrl = parse_url($url, PHP_URL_SCHEME).'://'.parse_url($url, PHP_URL_HOST);
 
         if ($port = parse_url($url, PHP_URL_PORT)) {
             $robotsUrl .= ":{$port}";

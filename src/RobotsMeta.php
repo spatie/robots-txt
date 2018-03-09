@@ -68,7 +68,7 @@ class RobotsMeta
     {
         $lines = explode(PHP_EOL, $html);
 
-        foreach($lines as $line) {
+        foreach ($lines as $line) {
             if (strpos(strtolower(trim($line)), '<meta name="robots"') === 0) {
                 return $line;
             }
