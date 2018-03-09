@@ -6,22 +6,22 @@ use InvalidArgumentException;
 
 class RobotsHeaders
 {
-    protected $content;
-
-    public function __construct(array $headers)
-    {
-        $this->content = $this->parseHeaders($headers);
-    }
+    protected $robotHeadersProperties = [];
 
     public static function readFrom(string $source): self
     {
         $content = @file_get_contents($source);
 
         if ($content === false) {
-            throw new InvalidArgumentException("Could not read from source {$source}");
+            throw new InvalidArgumentException("Could not read from source `{$source}`");
         }
 
         return new self($http_response_header ?? []);
+    }
+
+    public function __construct(array $headers)
+    {
+        $this->robotHeadersProperties = $this->parseHeaders($headers);
     }
 
     public static function create(array $headers): self
@@ -29,35 +29,31 @@ class RobotsHeaders
         return new self($headers);
     }
 
-    public function mayIndex(?string $userAgent = '*'): bool
+    public function mayIndex(string $userAgent = '*'): bool
     {
         return ! $this->noindex($userAgent);
     }
 
-    public function mayFollow(?string $userAgent = '*'): bool
+    public function mayFollow(string $userAgent = '*'): bool
     {
         return ! $this->nofollow($userAgent);
     }
 
-    public function noindex(?string $userAgent = '*'): bool
+    public function noindex(string $userAgent = '*'): bool
     {
-        return $this->content[$userAgent]['noindex'] ?? false;
+        return $this->robotHeadersProperties[$userAgent]['noindex'] ?? false;
     }
 
-    public function nofollow(?string $userAgent = '*'): bool
+    public function nofollow(string $userAgent = '*'): bool
     {
-        return $this->content[$userAgent]['nofollow'] ?? false;
+        return $this->robotHeadersProperties[$userAgent]['nofollow'] ?? false;
     }
 
     protected function parseHeaders(array $headers): array
     {
-        $content = [];
+        $robotHeadders = $this->filterRobotHeaders($headers);
 
-        foreach ($headers as $header) {
-            if (strpos(strtolower($header), 'x-robots-tag') === false) {
-                continue;
-            }
-
+        return array_reduce($robotHeadders, function(array $parsedHeaders, string $header) {
             $headerParts = explode(':', $header);
 
             $userAgent = count($headerParts) === 3
@@ -66,12 +62,20 @@ class RobotsHeaders
 
             $options = end($headerParts);
 
-            $content[$userAgent] = [
+            $parsedHeaders[$userAgent] = [
                 'noindex' => strpos(strtolower($options), 'noindex') !== false,
                 'nofollow' => strpos(strtolower($options), 'nofollow') !== false,
             ];
-        }
 
-        return $content;
+            return $parsedHeaders;
+
+        }, []);
+    }
+
+    protected function filterRobotHeaders(array $headers): array
+    {
+        return array_filter($headers, function(string $header) {
+            return strpos(strtolower($header), 'x-robots-tag') === 0;
+        });
     }
 }

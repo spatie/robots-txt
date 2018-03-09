@@ -2,7 +2,6 @@
 
 namespace Spatie\Robots\Tests;
 
-use InvalidArgumentException;
 use Spatie\Robots\Robots;
 
 class RobotsTest extends TestCase
@@ -46,16 +45,14 @@ class RobotsTest extends TestCase
     /** @test */
     public function it_can_discover_default_robots_file()
     {
+        $this->markAsSkippedUnlessLocalTestServerIsRunning();
+
         $robots = Robots::create();
 
-        try {
-            $this->assertFalse($robots->mayIndex($this->getLocalServerUrl('/nl/admin')));
+        $this->assertFalse($robots->mayIndex($this->getLocalTestServerUrl('/nl/admin')));
 
-            $this->assertFalse($robots->mayIndex($this->getLocalServerUrl('/nl/admin/')));
+        $this->assertFalse($robots->mayIndex($this->getLocalTestServerUrl('/nl/admin/')));
 
-            $this->assertTrue($robots->mayIndex($this->getLocalServerUrl('/nl')));
-        } catch (InvalidArgumentException $e) {
-            $this->markTestSkipped('Could not connect to the server.');
-        }
+        $this->assertTrue($robots->mayIndex($this->getLocalTestServerUrl('/nl')));
     }
 }

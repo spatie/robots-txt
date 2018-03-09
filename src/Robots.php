@@ -4,13 +4,13 @@ namespace Spatie\Robots;
 
 class Robots
 {
-    /** @var null|string */
+    /** @var string|null */
     protected $userAgent;
 
-    /** @var null|\Spatie\Robots\RobotsTxt */
+    /** @var \Spatie\Robots\RobotsTxt|null */
     protected $robotsTxt;
 
-    public function __construct(?string $userAgent = null, ?string $source = null)
+    public function __construct(string $userAgent = null, string $source = null)
     {
         $this->userAgent = $userAgent;
 
@@ -26,18 +26,16 @@ class Robots
         return $this;
     }
 
-    public static function create(?string $userAgent = null, ?string $source = null): self
+    public static function create(string $userAgent = null, string $source = null): self
     {
         return new self($userAgent, $source);
     }
 
-    public function mayIndex(string $url, ?string $userAgent = null): bool
+    public function mayIndex(string $url, string $userAgent = null): bool
     {
         $userAgent = $userAgent ?? $this->userAgent;
 
-        $robotsTxt =
-            $this->robotsTxt
-            ?? RobotsTxt::create($this->createRobotsUrl($url));
+        $robotsTxt = $this->robotsTxt ?? RobotsTxt::create($this->createRobotsUrl($url));
 
         return
             $robotsTxt->allows($url, $userAgent)

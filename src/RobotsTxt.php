@@ -6,22 +6,22 @@ use InvalidArgumentException;
 
 class RobotsTxt
 {
-    protected $content;
-
-    public function __construct(string $content)
-    {
-        $this->content = $this->parseContent($content);
-    }
+    protected $disallowsPerUserAgent = [];
 
     public static function readFrom(string $source): self
     {
         $content = @file_get_contents($source);
 
         if ($content === false) {
-            throw new InvalidArgumentException("Could not read source from {$source}");
+            throw new InvalidArgumentException("Could not read source from `{$source}`");
         }
 
         return new self($content);
+    }
+
+    public function __construct(string $content)
+    {
+        $this->disallowsPerUserAgent = $this->getDisallowsPerUserAgent($content);
     }
 
     public static function create(string $source): self
@@ -40,70 +40,65 @@ class RobotsTxt
     {
         $path = parse_url($url, PHP_URL_PATH);
 
-        $rules = $this->content[$userAgent] ?? $this->content['*'] ?? [];
+        $disallows = $this->disallowsPerUserAgent[$userAgent] ?? $this->disallowsPerUserAgent['*'] ?? [];
 
-        $isMatchingRule = false;
+        return ! $this->pathIsDenied($path, $disallows);
+    }
 
-        reset($rules);
+    protected function pathIsDenied(string $path, array $disallows): bool
+    {
+        foreach($disallows as $disallow) {
+            $trimmedDisallow = rtrim($disallow, '/');
 
-        while (! $isMatchingRule && $rule = current($rules)) {
-            $trimmedRule = rtrim($rule, '/');
-
-            $isMatchingRule = in_array($path, [$rule, $trimmedRule]);
-
-            if ($isMatchingRule) {
-                break;
+            if (in_array($path, [$disallow, $trimmedDisallow])) {
+                return true;
             }
 
-            if (! $this->isDirectory($rule)) {
+            if (!$this->concernsDirectory($disallow)) {
                 continue;
             }
 
-            $isMatchingRule = $this->isUrlInDirectory($path, $rule);
-
-            next($rules);
+            if ($this->isUrlInDirectory($path, $disallow)) {
+                return true;
+            }
         }
 
-        return ! $isMatchingRule;
+        return false;
     }
 
-    protected function parseContent(string $content): array
+    protected function getDisallowsPerUserAgent(string $content): array
     {
         $lines = explode(PHP_EOL, $content);
 
-        $parsed = [];
+        $lines = array_filter($lines);
 
-        $current = null;
+        $disallowsPerUserAgent = [];
+
+        $currentUserAgent = null;
 
         foreach ($lines as $line) {
-            if (! $line) {
-                continue;
-            }
-
             if ($this->isCommentLine($line)) {
                 continue;
             }
 
             if ($this->isUserAgentLine($line)) {
-                $parsed[$this->parseUserAgent($line)] = [];
+                $disallowsPerUserAgent[$this->parseUserAgent($line)] = [];
 
-                $current = &$parsed[$this->parseUserAgent($line)];
+                $currentUserAgent = &$disallowsPerUserAgent[$this->parseUserAgent($line)];
 
                 continue;
             }
 
-            if ($current === null) {
+            if ($currentUserAgent === null) {
                 continue;
             }
 
             $disallowUrl = $this->parseDisallow($line);
 
-            $current[$disallowUrl] = $disallowUrl;
+            $currentUserAgent[$disallowUrl] = $disallowUrl;
         }
 
-        unset($current);
-
-        return $parsed;
+        return $disallowsPerUserAgent;
     }
 
     protected function isCommentLine(string $line): bool
@@ -126,7 +121,7 @@ class RobotsTxt
         return trim(str_replace('Disallow', '', trim($line)), ': ');
     }
 
-    protected function isDirectory(string $path): bool
+    protected function concernsDirectory(string $path): bool
     {
         return substr($path, strlen($path) - 1, 1) === '/';
     }

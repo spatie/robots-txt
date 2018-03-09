@@ -26,26 +26,22 @@ class RobotsHeadersTest extends TestCase
     /** @test */
     public function it_can_read_response_headers_from_a_server()
     {
-        try {
-            $robots = RobotsHeaders::readFrom($this->getLocalServerUrl('/nofollow'));
+        $this->markAsSkippedUnlessLocalTestServerIsRunning();
 
-            $this->assertTrue($robots->mayIndex());
-            $this->assertFalse($robots->mayFollow());
-        } catch (InvalidArgumentException $e) {
-            $this->markTestSkipped('Could not connect to the server.');
-        }
+        $robots = RobotsHeaders::readFrom($this->getLocalTestServerUrl('/nofollow'));
+
+        $this->assertTrue($robots->mayIndex());
+        $this->assertFalse($robots->mayFollow());
     }
 
     /** @test */
     public function it_can_read_response_headers_from_a_server_for_a_user_agent()
     {
-        try {
-            $robots = RobotsHeaders::readFrom($this->getLocalServerUrl('/nofollow-noindex-google'));
+        $this->markAsSkippedUnlessLocalTestServerIsRunning();
 
-            $this->assertFalse($robots->mayIndex('google'));
-            $this->assertFalse($robots->mayFollow('google'));
-        } catch (InvalidArgumentException $e) {
-            $this->markTestSkipped('Could not connect to the server.');
-        }
+        $robots = RobotsHeaders::readFrom($this->getLocalTestServerUrl('/nofollow-noindex-google'));
+
+        $this->assertFalse($robots->mayIndex('google'));
+        $this->assertFalse($robots->mayFollow('google'));
     }
 }
