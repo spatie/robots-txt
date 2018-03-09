@@ -2,9 +2,9 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/robots-txt.svg?style=flat-square)](https://packagist.org/packages/spatie/robots-txt)
 [![Build Status](https://img.shields.io/travis/spatie/robots-txt/master.svg?style=flat-square)](https://travis-ci.org/spatie/robots-txt)
-[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/xxxxxxxxx.svg?style=flat-square)](https://insight.sensiolabs.com/projects/xxxxxxxxx)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/robots-txt.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/robots-txt)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/robots-txt.svg?style=flat-square)](https://packagist.org/packages/spatie/robots-txt)
+[![StyleCI](https://styleci.io/repos/122979707/shield?branch=master)](https://styleci.io/repos/122979707)
 
 Determine if a page may be crawled from robots.txt, robots meta tags and robot headers.
 
