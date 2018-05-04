@@ -51,9 +51,9 @@ class RobotsHeaders
 
     protected function parseHeaders(array $headers): array
     {
-        $robotHeadders = $this->filterRobotHeaders($headers);
+        $robotHeaders = $this->filterRobotHeaders($headers);
 
-        return array_reduce($robotHeadders, function (array $parsedHeaders, $header) {
+        return array_reduce($robotHeaders, function (array $parsedHeaders, $header) {
             $header = $this->normalizeHeaders($header);
 
             $headerParts = explode(':', $header);
@@ -75,11 +75,12 @@ class RobotsHeaders
 
     protected function filterRobotHeaders(array $headers): array
     {
-        return array_filter($headers, function ($header) {
-            $header = $this->normalizeHeaders($header);
+        return array_filter($headers, function ($header) use ($headers) {
+            $headerContent = $this->normalizeHeaders($headers[$header] ?? null);
 
-            return strpos(strtolower($header), 'x-robots-tag') === 0;
-        });
+            return strpos(strtolower($header), 'x-robots-tag') === 0
+                || strpos(strtolower($headerContent), 'x-robots-tag') === 0;
+        }, ARRAY_FILTER_USE_KEY);
     }
 
     protected function normalizeHeaders($headers): string
