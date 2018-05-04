@@ -76,7 +76,7 @@ class RobotsHeaders
     protected function filterRobotHeaders(array $headers): array
     {
         return array_filter($headers, function ($header) use ($headers) {
-            $headerContent = $this->normalizeHeaders($headers[$header] ?? null);
+            $headerContent = $this->normalizeHeaders($headers[$header] ?? []);
 
             return strpos(strtolower($header), 'x-robots-tag') === 0
                 || strpos(strtolower($headerContent), 'x-robots-tag') === 0;
