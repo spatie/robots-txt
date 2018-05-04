@@ -19,14 +19,14 @@ class RobotsHeaders
         return new self($http_response_header ?? []);
     }
 
-    public function __construct(array $headers)
-    {
-        $this->robotHeadersProperties = $this->parseHeaders($headers);
-    }
-
     public static function create(array $headers): self
     {
         return new self($headers);
+    }
+
+    public function __construct(array $headers)
+    {
+        $this->robotHeadersProperties = $this->parseHeaders($headers);
     }
 
     public function mayIndex(string $userAgent = '*'): bool
@@ -53,7 +53,9 @@ class RobotsHeaders
     {
         $robotHeadders = $this->filterRobotHeaders($headers);
 
-        return array_reduce($robotHeadders, function (array $parsedHeaders, string $header) {
+        return array_reduce($robotHeadders, function (array $parsedHeaders, $header) {
+            $header = $this->normalizeHeaders($header);
+
             $headerParts = explode(':', $header);
 
             $userAgent = count($headerParts) === 3
@@ -73,8 +75,15 @@ class RobotsHeaders
 
     protected function filterRobotHeaders(array $headers): array
     {
-        return array_filter($headers, function (string $header) {
+        return array_filter($headers, function ($header) {
+            $header = $this->normalizeHeaders($header);
+
             return strpos(strtolower($header), 'x-robots-tag') === 0;
         });
+    }
+
+    protected function normalizeHeaders($headers): string
+    {
+        return implode(',', (array) $headers);
     }
 }

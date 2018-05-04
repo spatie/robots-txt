@@ -19,14 +19,14 @@ class RobotsMeta
         return new self($content);
     }
 
-    public function __construct(string $html)
-    {
-        $this->robotsMetaTagProperties = $this->findRobotsMetaTagProperties($html);
-    }
-
     public static function create(string $source): self
     {
         return new self($source);
+    }
+
+    public function __construct(string $html)
+    {
+        $this->robotsMetaTagProperties = $this->findRobotsMetaTagProperties($html);
     }
 
     public function mayIndex(): bool

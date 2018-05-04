@@ -6,6 +6,8 @@ use InvalidArgumentException;
 
 class RobotsTxt
 {
+    protected static $robotsCache = [];
+
     protected $disallowsPerUserAgent = [];
 
     public static function readFrom(string $source): self
