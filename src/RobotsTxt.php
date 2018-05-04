@@ -38,7 +38,7 @@ class RobotsTxt
 
     public function allows(string $url, ?string $userAgent = '*'): bool
     {
-        $path = parse_url($url, PHP_URL_PATH);
+        $path = parse_url($url, PHP_URL_PATH) ?? '';
 
         $disallows = $this->disallowsPerUserAgent[$userAgent] ?? $this->disallowsPerUserAgent['*'] ?? [];
 
