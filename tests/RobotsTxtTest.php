@@ -53,4 +53,12 @@ class RobotsTxtTest extends TestCase
 
         $this->assertFalse($robots->allows('/', 'google'));
     }
+
+    /** @test */
+    public function test_invalid_robots_txt()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots-invalid.txt');
+
+        $this->assertTrue($robots->allows('/'));
+    }
 }
