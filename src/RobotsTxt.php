@@ -12,11 +12,7 @@ class RobotsTxt
 
     public static function readFrom(string $source): self
     {
-        $content = @file_get_contents($source);
-
-        if ($content === false) {
-            throw new InvalidArgumentException("Could not read source from `{$source}`");
-        }
+        $content = @file_get_contents($source) ?? '';
 
         return new self($content);
     }

@@ -55,9 +55,17 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
-    public function test_invalid_robots_txt()
+    public function it_can_handle_an_invalid_robots_txt()
     {
-        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots-invalid.txt');
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/invalid-robots.txt');
+
+        $this->assertTrue($robots->allows('/'));
+    }
+
+    /** @test */
+    public function it_can_handle_an_empty_robots_txt()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/empty-robots.txt');
 
         $this->assertTrue($robots->allows('/'));
     }
