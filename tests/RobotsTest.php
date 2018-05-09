@@ -16,6 +16,12 @@ class RobotsTest extends TestCase
     }
 
     /** @test */
+    public function it_return_true_on_source_string()
+    {
+        $this->assertTrue((new Robots('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', 'source'))->mayIndex('https://spatie.be'));
+    }
+
+    /** @test */
     public function with_custom_user_agent_in_construct()
     {
         $robots = Robots::create('google')

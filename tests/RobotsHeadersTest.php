@@ -23,6 +23,15 @@ class RobotsHeadersTest extends TestCase
     }
 
     /** @test */
+    public function it_throws_exception_on_reading_source()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Could not read from source `invalid_source`');
+
+        $robots = RobotsHeaders::readFrom('invalid_source');
+    }
+
+    /** @test */
     public function it_can_read_response_headers_from_a_server()
     {
         $this->markAsSkippedUnlessLocalTestServerIsRunning();
