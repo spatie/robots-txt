@@ -2,8 +2,6 @@
 
 namespace Spatie\Robots;
 
-use InvalidArgumentException;
-
 class RobotsTxt
 {
     protected static $robotsCache = [];
