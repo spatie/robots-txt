@@ -71,7 +71,7 @@ We publish all received postcards [on our company website](https://spatie.be/en/
 
 ## Credits
 
-- [Brent Roose](https://github.com/brendt_gd)
+- [Brent Roose](https://github.com/brendt)
 - [All Contributors](../../contributors)
 
 ## Support us
