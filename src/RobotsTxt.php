@@ -104,17 +104,17 @@ class RobotsTxt
 
     protected function isUserAgentLine(string $line): bool
     {
-        return strpos(trim($line), 'User-agent') === 0;
+        return strpos(trim(strtolower($line)), 'user-agent') === 0;
     }
 
     protected function parseUserAgent(string $line): string
     {
-        return trim(str_replace('User-agent', '', trim($line)), ': ');
+        return trim(str_replace('user-agent', '', strtolower(trim($line))), ': ');
     }
 
     protected function parseDisallow(string $line): string
     {
-        return trim(str_replace('Disallow', '', trim($line)), ': ');
+        return trim(str_replace('disallow', '', strtolower(trim($line))), ': ');
     }
 
     protected function concernsDirectory(string $path): bool
