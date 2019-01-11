@@ -2,6 +2,9 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 1.0.2 - 2019-01-11
+
+- make robots.txt check case insensitive
 
 ## 1.0.1 - 2018-05-07
 
