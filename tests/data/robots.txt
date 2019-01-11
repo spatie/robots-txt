@@ -1,10 +1,10 @@
 # robotstxt.org/
 
-user-agent: *
+User-agent: *
 
-disallow: /nl/admin/
-disallow: /en/admin/
+Disallow: /nl/admin/
+Disallow: /en/admin/
 
-user-agent: google
+User-agent: google
 
-disallow: /
+Disallow: /

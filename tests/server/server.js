@@ -5,9 +5,7 @@ var app = require('express')();
 app.get('/nofollow', function (req, res) {
     console.log('Request at /nofollow');
 
-    res.writeHead(200, {
-        'X-Robots-Tag': 'nofollow'
-    });
+    res.writeHead(200, { 'X-Robots-Tag': 'nofollow' });
 
     res.end();
 });
@@ -15,9 +13,7 @@ app.get('/nofollow', function (req, res) {
 app.get('/nofollow-noindex', function (req, res) {
     console.log('Request at /nofollow-noindex');
 
-    res.writeHead(200, {
-        'X-Robots-Tag': 'nofollow, noindex'
-    });
+    res.writeHead(200, { 'X-Robots-Tag': 'nofollow, noindex' });
 
     res.end();
 });
@@ -25,9 +21,7 @@ app.get('/nofollow-noindex', function (req, res) {
 app.get('/nofollow-noindex-google', function (req, res) {
     console.log('Request at /nofollow-noindex-google');
 
-    res.writeHead(200, {
-        'X-Robots-Tag': 'google: nofollow, noindex'
-    });
+    res.writeHead(200, { 'X-Robots-Tag': 'google: nofollow, noindex' });
 
     res.end();
 });
@@ -37,10 +31,10 @@ app.get('/robots.txt', function (req, res) {
 
     const content = `# robotstxt.org/
 
-user-agent: *
+User-agent: *
 
-disallow: /nl/admin/
-disallow: /en/admin / `;
+Disallow: /nl/admin/
+Disallow: /en/admin/`;
 
     res.writeHead(200);
 
