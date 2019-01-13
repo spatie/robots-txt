@@ -41,12 +41,38 @@ class RobotsHeaders
 
     public function noindex(string $userAgent = '*'): bool
     {
-        return $this->robotHeadersProperties[$userAgent]['noindex'] ?? false;
+        $userAgent = strtolower($userAgent);
+
+        return
+            $this->robotHeadersProperties[$userAgent]['noindex']
+            ?? $this->robotHeadersProperties[$this->getWildCardUserAgent($userAgent)]['noindex']
+            ?? $this->robotHeadersProperties['*']['noindex']
+            ?? false;
     }
 
     public function nofollow(string $userAgent = '*'): bool
     {
-        return $this->robotHeadersProperties[$userAgent]['nofollow'] ?? false;
+        $userAgent = strtolower($userAgent);
+
+        return
+            $this->robotHeadersProperties[$userAgent]['nofollow']
+            ?? $this->robotHeadersProperties[$this->getWildCardUserAgent($userAgent)]['nofollow']
+            ?? $this->robotHeadersProperties['*']['nofollow']
+            ?? false;
+    }
+
+    protected function getWildCardUserAgent(string $userAgent): ?string
+    {
+        if ($userAgent !== '*') {
+            for ($i = 1; $i <= strlen($userAgent); $i++) {
+                $wildCardUserAgent = substr($userAgent, 0, $i).'*';
+                if (isset($this->robotHeadersProperties[$wildCardUserAgent])) {
+                    return $wildCardUserAgent;
+                }
+            }
+        }
+
+        return null;
     }
 
     protected function parseHeaders(array $headers): array
@@ -62,12 +88,18 @@ class RobotsHeaders
                 ? trim($headerParts[1])
                 : '*';
 
+            $userAgent = strtolower($userAgent);
             $options = end($headerParts);
 
-            $parsedHeaders[$userAgent] = [
-                'noindex' => strpos(strtolower($options), 'noindex') !== false,
-                'nofollow' => strpos(strtolower($options), 'nofollow') !== false,
-            ];
+            $parsedHeaders[$userAgent] = [];
+
+            if (strpos(strtolower($options), 'index')) {
+                $parsedHeaders[$userAgent]['noindex'] = strpos(strtolower($options), 'noindex') !== false;
+            }
+
+            if (strpos(strtolower($options), 'follow')) {
+                $parsedHeaders[$userAgent]['nofollow'] = strpos(strtolower($options), 'nofollow') !== false;
+            }
 
             return $parsedHeaders;
         }, []);

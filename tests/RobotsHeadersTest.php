@@ -13,6 +13,8 @@ class RobotsHeadersTest extends TestCase
             'X-custom: test',
             'X-Robots-Tag: nofollow',
             'X-Robots-Tag: google: noindex, nofollow',
+            'X-Robots-Tag: googlebot*: noindex, follow',
+            'X-Robots-Tag: bingBot: noindex, nofollow',
         ]);
 
         $this->assertTrue($robots->mayIndex());
@@ -20,6 +22,13 @@ class RobotsHeadersTest extends TestCase
 
         $this->assertFalse($robots->mayIndex('google'));
         $this->assertFalse($robots->mayFollow('google'));
+
+        $this->assertFalse($robots->mayFollow('otherbot'));
+
+        $this->assertFalse($robots->mayFollow('Bingbot'));
+
+        $this->assertFalse($robots->mayIndex('googlebot'));
+        $this->assertTrue($robots->mayFollow('googlebot'));
     }
 
     /** @test */
