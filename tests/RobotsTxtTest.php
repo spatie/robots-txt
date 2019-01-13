@@ -69,4 +69,14 @@ class RobotsTxtTest extends TestCase
 
         $this->assertTrue($robots->allows('/'));
     }
+
+    /** @test */
+    public function it_can_handle_wildcard_and_user_agent()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/wildcard-robots.txt');
+
+        $this->assertTrue($robots->allows('/en/', 'google'));
+        $this->assertTrue($robots->allows('/fr/', 'googlebot-news'));
+        $this->assertFalse($robots->allows('/fr/news', 'googlebot-news'));
+    }
 }

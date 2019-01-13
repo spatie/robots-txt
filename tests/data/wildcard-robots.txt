@@ -1,0 +1,13 @@
+# robotstxt.org/
+
+User-agent: *
+Disallow: /
+Disallow: /en/
+
+User-agent: google
+Allow: /
+
+User-agent: googlebot*
+Disallow: /fr/
+Allow: /fr/$
+Disallow: /fr/p*.html

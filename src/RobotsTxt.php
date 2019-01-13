@@ -32,34 +32,68 @@ class RobotsTxt
         return new self($source);
     }
 
+    // Google says (https://developers.google.com/search/reference/robots_txt) :
+    // Only one group of group-member records is valid for a particular crawler.
+    // The crawler must determine the correct group of records by finding the group
+    // with the most specific user-agent that still matches.
     public function allows(string $url, ?string $userAgent = '*'): bool
     {
+        $userAgent = strtolower($userAgent);
+
+        if ($userAgent === null) {
+            $userAgent = '*';
+        }
+
         $path = parse_url($url, PHP_URL_PATH) ?? '';
 
-        $disallows = $this->disallowsPerUserAgent[$userAgent] ?? $this->disallowsPerUserAgent['*'] ?? [];
+        if ($userAgent != '*' && isset($this->disallowsPerUserAgent[$userAgent])) {
+            return ! $this->pathIsDenied($path, $this->disallowsPerUserAgent[$userAgent]) ?? true;
+        } elseif ($userAgent != '*' && $wildCardUserAgent = $this->getWildCardUserAgent($userAgent)) {
+            return ! $this->pathIsDenied($path, $this->disallowsPerUserAgent[$wildCardUserAgent]) ?? true;
+        } elseif (isset($this->disallowsPerUserAgent['*'])) {
+            return ! $this->pathIsDenied($path, $this->disallowsPerUserAgent['*']) ?? true;
+        }
 
-        return ! $this->pathIsDenied($path, $disallows);
+        return true;
     }
 
-    protected function pathIsDenied(string $path, array $disallows): bool
+    protected function getWildCardUserAgent(string $userAgent): ?string
     {
-        foreach ($disallows as $disallow) {
-            $trimmedDisallow = rtrim($disallow, '/');
-
-            if (in_array($path, [$disallow, $trimmedDisallow])) {
-                return true;
-            }
-
-            if (! $this->concernsDirectory($disallow)) {
-                continue;
-            }
-
-            if ($this->isUrlInDirectory($path, $disallow)) {
-                return true;
+        if ($userAgent !== '*') {
+            for ($i = 1; $i <= strlen($userAgent); $i++) {
+                $wildCardUserAgent = substr($userAgent, 0, $i).'*';
+                if (isset($this->disallowsPerUserAgent[$wildCardUserAgent])) {
+                    return $wildCardUserAgent;
+                }
             }
         }
 
-        return false;
+        return null;
+    }
+
+    protected function pathIsDenied(string $path, array $rules)
+    {
+        foreach ($rules as $pattern => $rule) {
+            if ($this->match($pattern, $path)) {
+                return $rule;
+            }
+        }
+    }
+
+    protected function complexRule($path): boolean
+    {
+        return strpos($path, ['$', '*']);
+    }
+
+    protected function match($pattern, $string)
+    {
+        $pattern = preg_quote($pattern, '/');
+        $pattern = str_replace('\*', '.*', $pattern);
+        //$pattern = preg_replace('/\\\$$/', '$', $pattern); // is not working
+        $pattern = substr($pattern, -2) == '\$' ? substr($pattern, 0, strlen($pattern) - 2).'$' : $pattern;
+        $pattern = preg_replace('/\/$/', '/?', $pattern);
+
+        return (bool) preg_match('/^'.$pattern.'/', $string);
     }
 
     protected function getDisallowsPerUserAgent(string $content): array
@@ -73,10 +107,6 @@ class RobotsTxt
         $currentUserAgent = null;
 
         foreach ($lines as $line) {
-            if ($this->isCommentLine($line)) {
-                continue;
-            }
-
             if ($this->isUserAgentLine($line)) {
                 $disallowsPerUserAgent[$this->parseUserAgent($line)] = [];
 
@@ -89,37 +119,52 @@ class RobotsTxt
                 continue;
             }
 
-            $disallowUrl = $this->parseDisallow($line);
+            list($pattern, $rule) = $this->parse($line);
+            if ($pattern !== null) { // other than allow/disallow
+                $currentUserAgent[$pattern] = $rule;
+            }
+        }
 
-            $currentUserAgent[$disallowUrl] = $disallowUrl;
+        return $this->orderRules($disallowsPerUserAgent);
+    }
+
+    // Google says (https://developers.google.com/search/reference/robots_txt) :
+    // At a group-member level, in particular for allow and disallow directives, the most specific rule
+    // based on the length of the [path] entry will trump the less specific (shorter) rule. The order of
+    // precedence for rules with wildcards is undefined.
+    protected function orderRules(array $disallowsPerUserAgent): array
+    {
+        foreach ($disallowsPerUserAgent as $userAgent => $rules) {
+            array_multisort(array_map('strlen', array_keys($rules)), SORT_DESC, $rules);
+            $disallowsPerUserAgent[$userAgent] = $rules;
         }
 
         return $disallowsPerUserAgent;
     }
 
-    protected function isCommentLine(string $line): bool
-    {
-        return strpos(trim($line), '#') === 0;
-    }
-
     protected function isUserAgentLine(string $line): bool
     {
-        return strpos(trim(strtolower($line)), 'user-agent') === 0;
+        return stripos(str_replace(' ', '', $line), 'user-agent:') === 0;
     }
 
     protected function parseUserAgent(string $line): string
     {
-        return trim(str_replace('user-agent', '', strtolower(trim($line))), ': ');
+        return strtolower(trim(preg_replace('/^User-agent\s*:/i', '', trim($line))));
     }
 
-    protected function parseDisallow(string $line): string
+    protected function parse(string $line): ?array
     {
-        return trim(str_replace('disallow', '', strtolower(trim($line))), ': ');
-    }
+        $line = trim(preg_replace('/\s+!/', ':', $line));
 
-    protected function concernsDirectory(string $path): bool
-    {
-        return substr($path, strlen($path) - 1, 1) === '/';
+        if (stripos($line, 'disallow:') === 0) {
+            return [trim(preg_replace('/^disallow:/i', '', $line)), true];
+        }
+
+        if (stripos($line, 'allow:') === 0) {
+            return [trim(preg_replace('/^allow:/i', '', $line)), false];
+        }
+
+        // else: could be crawl-delay, sitemap...
     }
 
     protected function isUrlInDirectory(string $url, string $path): bool
