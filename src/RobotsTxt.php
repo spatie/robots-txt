@@ -59,12 +59,12 @@ class RobotsTxt
 
     protected function getWildCardUserAgent(string $userAgent): ?string
     {
-        if ($userAgent !== '*') {
-            for ($i = 1; $i <= strlen($userAgent); $i++) {
-                $wildCardUserAgent = substr($userAgent, 0, $i).'*';
-                if (isset($this->disallowsPerUserAgent[$wildCardUserAgent])) {
-                    return $wildCardUserAgent;
-                }
+        $wildcardUserAgents = array_filter(array_keys($this->disallowsPerUserAgent), function ($userAgent) {
+            return $userAgent != '*' && strpos($userAgent, '*') !== false;
+        });
+        foreach ($wildcardUserAgents as $wildcardUserAgent) {
+            if (strpos($userAgent, substr($wildcardUserAgent, 0, -1)) === 0) {
+                return $wildcardUserAgent;
             }
         }
 
@@ -80,16 +80,10 @@ class RobotsTxt
         }
     }
 
-    protected function complexRule($path): boolean
-    {
-        return strpos($path, ['$', '*']);
-    }
-
     protected function match($pattern, $string)
     {
         $pattern = preg_quote($pattern, '/');
         $pattern = str_replace('\*', '.*', $pattern);
-        //$pattern = preg_replace('/\\\$$/', '$', $pattern); // is not working
         $pattern = substr($pattern, -2) == '\$' ? substr($pattern, 0, strlen($pattern) - 2).'$' : $pattern;
         $pattern = preg_replace('/\/$/', '/?', $pattern);
 
