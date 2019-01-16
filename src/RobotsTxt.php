@@ -158,7 +158,7 @@ class RobotsTxt
             return [trim(preg_replace('/^allow:/i', '', $line)), false];
         }
 
-        // else: could be crawl-delay, sitemap...
+        return null; // else: could be crawl-delay, sitemap...
     }
 
     protected function isUrlInDirectory(string $url, string $path): bool
