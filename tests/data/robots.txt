@@ -4,7 +4,7 @@ User-agent: *
 
 Disallow: /nl/admin/
 Disallow: /en/admin/
-
+Disallow: /es/admin-disallow/
 User-agent: google
 
 Disallow: /

@@ -31,6 +31,14 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
+    public function test_disallow_keyword_in_url_is_correctly_disallowed()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
+
+        $this->assertFalse($robots->allows('/es/admin-disallow/', '*'));
+    }
+
+    /** @test */
     public function test_disallowed_link_for_default_user_agent()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
