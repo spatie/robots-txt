@@ -114,7 +114,7 @@ class RobotsTxt
 
     protected function parseDisallow(string $line): string
     {
-        return trim(preg_replace('~disallow: ?~', '', strtolower(($line))));
+        return trim(substr_replace(strtolower(trim($line)), '', 0, 8), ': ');
     }
 
     protected function concernsDirectory(string $path): bool
