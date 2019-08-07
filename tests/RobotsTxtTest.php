@@ -81,8 +81,6 @@ class RobotsTxtTest extends TestCase
     /** @test */
     public function it_can_handle_star_in_pattern()
     {
-        $this->markAsSkippedUnlessLocalTestServerIsRunning();
-
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
         $this->assertTrue($robots->allows('/en/admin'));
@@ -93,8 +91,6 @@ class RobotsTxtTest extends TestCase
     /** @test */
     public function it_can_handle_dollar_in_pattern()
     {
-        $this->markAsSkippedUnlessLocalTestServerIsRunning();
-
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
         $this->assertTrue($robots->allows('/fr/ad'));
@@ -106,8 +102,6 @@ class RobotsTxtTest extends TestCase
     /** @test */
     public function it_can_handle_query_strings()
     {
-        $this->markAsSkippedUnlessLocalTestServerIsRunning();
-
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
         $this->assertTrue($robots->allows('/en/admin'));
