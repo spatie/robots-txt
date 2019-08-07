@@ -79,7 +79,7 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
-    public function it_can_handle_stars_in_pattern()
+    public function it_can_handle_star_in_pattern()
     {
         $this->markAsSkippedUnlessLocalTestServerIsRunning();
 
@@ -91,6 +91,19 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
+    public function it_can_handle_dollar_in_pattern()
+    {
+        $this->markAsSkippedUnlessLocalTestServerIsRunning();
+
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
+
+        $this->assertTrue($robots->allows('/fr/ad'));
+        $this->assertFalse($robots->allows('/fr/admin'));
+        $this->assertTrue($robots->allows('/fr/admin/'));
+        $this->assertTrue($robots->allows('/fr/admin?test'));
+    }
+
+    /** @test */
     public function it_can_handle_query_strings()
     {
         $this->markAsSkippedUnlessLocalTestServerIsRunning();
@@ -98,7 +111,8 @@ class RobotsTxtTest extends TestCase
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
         $this->assertTrue($robots->allows('/en/admin'));
-        $this->assertFalse($robots->allows('/en/admin?a'));
-        $this->assertFalse($robots->allows('/en/admin?a=b'));
+        $this->assertTrue($robots->allows('/en/admin?id=123'));
+        $this->assertFalse($robots->allows('/en/admin?print'));
+        $this->assertFalse($robots->allows('/en/admin?print=true'));
     }
 }

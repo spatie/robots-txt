@@ -56,11 +56,34 @@ class RobotsTxt
     protected function pathIsDenied(string $requestUri, array $disallows): bool
     {
         foreach ($disallows as $disallow) {
-            // must start with the pattern; open-ended
-            $disallowRegexp = '/^' . preg_quote($disallow, '/') . '/';
+            if ($disallow === '') {
+                continue;
+            }
 
-            // replace (quoted) stars with an eager match
+            $stopAtEndOfString = false;
+
+            if ($disallow[-1] === '$') {
+                // if the pattern ends with a dollar sign, the string must end there
+                $disallow = substr($disallow, 0, -1);
+                $stopAtEndOfString = true;
+            }
+
+            // convert to regexp
+            $disallowRegexp = preg_quote($disallow, '/');
+
+            // the pattern must start at the beginning of the string...
+            $disallowRegexp = '^' . $disallowRegexp;
+
+            // ...and optionally stop at the end of the string
+            if ($stopAtEndOfString) {
+                $disallowRegexp .= '$';
+            }
+
+            // replace (preg_quote'd) stars with an eager match
             $disallowRegexp = str_replace('\\*', '.*', $disallowRegexp);
+
+            // enclose in delimiters
+            $disallowRegexp = '/' . $disallowRegexp . '/';
 
             if (preg_match($disallowRegexp, $requestUri) === 1) {
                 return true;
