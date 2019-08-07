@@ -2,6 +2,10 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 1.0.4 - 2019-08-07
+
+- improve readability
+
 ## 1.0.3 - 2019-03-11
 
 - fix parsing robotstxt urls with keywords (#14)
