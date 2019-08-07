@@ -44,7 +44,7 @@ class RobotsTxt
             }
 
             if (isset($parts['query'])) {
-                $requestUri .= '?' . $parts['query'];
+                $requestUri .= '?'.$parts['query'];
             } elseif ($this->hasEmptyQueryString($url)) {
                 $requestUri .= '?';
             }
@@ -74,7 +74,7 @@ class RobotsTxt
             $disallowRegexp = preg_quote($disallow, '/');
 
             // the pattern must start at the beginning of the string...
-            $disallowRegexp = '^' . $disallowRegexp;
+            $disallowRegexp = '^'.$disallowRegexp;
 
             // ...and optionally stop at the end of the string
             if ($stopAtEndOfString) {
@@ -85,7 +85,7 @@ class RobotsTxt
             $disallowRegexp = str_replace('\\*', '.*', $disallowRegexp);
 
             // enclose in delimiters
-            $disallowRegexp = '/' . $disallowRegexp . '/';
+            $disallowRegexp = '/'.$disallowRegexp.'/';
 
             if (preg_match($disallowRegexp, $requestUri) === 1) {
                 return true;
