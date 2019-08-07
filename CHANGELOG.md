@@ -2,6 +2,10 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 1.0.5 - 2019-08-08
+
+- improvements around handling of wildcards, end-of-string, query string
+
 ## 1.0.4 - 2019-08-07
 
 - improve readability
