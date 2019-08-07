@@ -34,27 +34,35 @@ class RobotsTxt
 
     public function allows(string $url, ?string $userAgent = '*'): bool
     {
-        $path = parse_url($url, PHP_URL_PATH) ?? '';
+        $requestUri = '';
+
+        $url = parse_url($url);
+
+        if ($url !== false) {
+            if (isset($url['path'])) {
+                $requestUri .= $url['path'];
+            }
+
+            if (isset($url['query'])) {
+                $requestUri .= '?' . $url['query'];
+            }
+        }
 
         $disallows = $this->disallowsPerUserAgent[$userAgent] ?? $this->disallowsPerUserAgent['*'] ?? [];
 
-        return ! $this->pathIsDenied($path, $disallows);
+        return ! $this->pathIsDenied($requestUri, $disallows);
     }
 
-    protected function pathIsDenied(string $path, array $disallows): bool
+    protected function pathIsDenied(string $requestUri, array $disallows): bool
     {
         foreach ($disallows as $disallow) {
-            $trimmedDisallow = rtrim($disallow, '/');
+            // must start with the pattern; open-ended
+            $disallowRegexp = '/^' . preg_quote($disallow, '/') . '/';
 
-            if (in_array($path, [$disallow, $trimmedDisallow])) {
-                return true;
-            }
+            // replace (quoted) stars with an eager match
+            $disallowRegexp = str_replace('\\*', '.*', $disallowRegexp);
 
-            if (! $this->concernsDirectory($disallow)) {
-                continue;
-            }
-
-            if ($this->isUrlInDirectory($path, $disallow)) {
+            if (preg_match($disallowRegexp, $requestUri) === 1) {
                 return true;
             }
         }
@@ -117,11 +125,17 @@ class RobotsTxt
         return trim(substr_replace(strtolower(trim($line)), '', 0, 8), ': ');
     }
 
+    /**
+     * @deprecated
+     */
     protected function concernsDirectory(string $path): bool
     {
         return substr($path, strlen($path) - 1, 1) === '/';
     }
 
+    /**
+     * @deprecated
+     */
     protected function isUrlInDirectory(string $url, string $path): bool
     {
         return strpos($url, $path) === 0;

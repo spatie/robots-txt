@@ -77,4 +77,28 @@ class RobotsTxtTest extends TestCase
 
         $this->assertTrue($robots->allows('/'));
     }
+
+    /** @test */
+    public function it_can_handle_stars_in_pattern()
+    {
+        $this->markAsSkippedUnlessLocalTestServerIsRunning();
+
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
+
+        $this->assertTrue($robots->allows('/en/admin'));
+        $this->assertFalse($robots->allows('/en/admin/'));
+        $this->assertFalse($robots->allows('/en/admin/users'));
+    }
+
+    /** @test */
+    public function it_can_handle_query_strings()
+    {
+        $this->markAsSkippedUnlessLocalTestServerIsRunning();
+
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
+
+        $this->assertTrue($robots->allows('/en/admin'));
+        $this->assertFalse($robots->allows('/en/admin?a'));
+        $this->assertFalse($robots->allows('/en/admin?a=b'));
+    }
 }

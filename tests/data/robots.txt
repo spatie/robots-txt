@@ -2,8 +2,9 @@
 
 User-agent: *
 
+Disallow: /*?
 Disallow: /nl/admin/
-Disallow: /en/admin/
+Disallow: /en/admin/*
 Disallow: /es/admin-disallow/
 User-agent: google
 

@@ -55,7 +55,7 @@ class RobotsTest extends TestCase
 
         $robots = Robots::create();
 
-        $this->assertFalse($robots->mayIndex($this->getLocalTestServerUrl('/nl/admin')));
+        $this->assertTrue($robots->mayIndex($this->getLocalTestServerUrl('/nl/admin')));
 
         $this->assertFalse($robots->mayIndex($this->getLocalTestServerUrl('/nl/admin/')));
 
