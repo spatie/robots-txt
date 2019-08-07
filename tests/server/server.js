@@ -49,6 +49,14 @@ app.get('/nl', function (req, res) {
     res.end();
 });
 
+app.get('/nl/admin', function (req, res) {
+    console.log('Request at /nl/admin');
+
+    res.writeHead(200);
+
+    res.end();
+});
+
 var server = app.listen(4020, function () {
     var host = 'localhost';
     var port = server.address().port;
