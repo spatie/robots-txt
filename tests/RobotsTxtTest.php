@@ -96,6 +96,7 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/fr/ad'));
         $this->assertFalse($robots->allows('/fr/admin'));
         $this->assertTrue($robots->allows('/fr/admin/'));
+        $this->assertTrue($robots->allows('/fr/admin?'));
         $this->assertTrue($robots->allows('/fr/admin?test'));
     }
 

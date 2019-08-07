@@ -36,15 +36,17 @@ class RobotsTxt
     {
         $requestUri = '';
 
-        $url = parse_url($url);
+        $parts = parse_url($url);
 
-        if ($url !== false) {
-            if (isset($url['path'])) {
-                $requestUri .= $url['path'];
+        if ($parts !== false) {
+            if (isset($parts['path'])) {
+                $requestUri .= $parts['path'];
             }
 
-            if (isset($url['query'])) {
-                $requestUri .= '?' . $url['query'];
+            if (isset($parts['query'])) {
+                $requestUri .= '?' . $parts['query'];
+            } elseif ($this->hasEmptyQueryString($url)) {
+                $requestUri .= '?';
             }
         }
 
@@ -88,6 +90,29 @@ class RobotsTxt
             if (preg_match($disallowRegexp, $requestUri) === 1) {
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks for an empty query string.
+     *
+     * This works around the fact that parse_url() will not set the 'query' key when the query string is empty.
+     * See: https://bugs.php.net/bug.php?id=78385
+     */
+    protected function hasEmptyQueryString(string $url) : bool
+    {
+        if ($url === '') {
+            return false;
+        }
+
+        if ($url[-1] === '?') { // ends with ?
+            return true;
+        }
+
+        if (strpos($url, '?#') !== false) { // empty query string, followed by a fragment
+            return true;
         }
 
         return false;
