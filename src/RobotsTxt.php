@@ -10,9 +10,9 @@ class RobotsTxt
 
     public static function readFrom(string $source): self
     {
-        $content = @file_get_contents($source) ?? '';
+        $content = @file_get_contents($source);
 
-        return new self($content);
+        return new self($content !== false ? $content : '');
     }
 
     public function __construct(string $content)
