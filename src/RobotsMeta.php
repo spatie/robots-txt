@@ -10,7 +10,7 @@ class RobotsMeta
 
     public static function readFrom(string $source): self
     {
-        $content = @file_get_contents($source);
+        $content = @file_get_contents($source, false, NULL, 0, 1 * 1024 * 1024);
 
         if ($content === false) {
             throw new InvalidArgumentException("Could not read from source `{$source}`");
