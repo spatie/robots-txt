@@ -41,12 +41,18 @@ class RobotsHeaders
 
     public function noindex(string $userAgent = '*'): bool
     {
-        return $this->robotHeadersProperties[$userAgent]['noindex'] ?? false;
+        return
+            $this->robotHeadersProperties[$userAgent]['noindex']
+            ?? $this->robotHeadersProperties['*']['noindex']
+            ?? false;
     }
 
     public function nofollow(string $userAgent = '*'): bool
     {
-        return $this->robotHeadersProperties[$userAgent]['nofollow'] ?? false;
+        return
+            $this->robotHeadersProperties[$userAgent]['nofollow']
+            ?? $this->robotHeadersProperties['*']['nofollow']
+            ?? false;
     }
 
     protected function parseHeaders(array $headers): array

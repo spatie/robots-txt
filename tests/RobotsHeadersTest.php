@@ -20,6 +20,8 @@ class RobotsHeadersTest extends TestCase
 
         $this->assertFalse($robots->mayIndex('google'));
         $this->assertFalse($robots->mayFollow('google'));
+
+        $this->assertFalse($robots->mayFollow('other-bot'));
     }
 
     /** @test */
@@ -48,6 +50,11 @@ class RobotsHeadersTest extends TestCase
         $this->markAsSkippedUnlessLocalTestServerIsRunning();
 
         $robots = RobotsHeaders::readFrom($this->getLocalTestServerUrl('/nofollow-noindex-google'));
+
+        $this->assertFalse($robots->mayIndex('google'));
+        $this->assertFalse($robots->mayFollow('google'));
+
+        $robots = RobotsHeaders::readFrom($this->getLocalTestServerUrl('/nofollow-noindex'));
 
         $this->assertFalse($robots->mayIndex('google'));
         $this->assertFalse($robots->mayFollow('google'));
