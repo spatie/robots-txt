@@ -42,11 +42,8 @@ class RobotsHeaders
     public function noindex(string $userAgent = '*'): bool
     {
         return
-            // 1. We check for the suggested user-agent
             $this->robotHeadersProperties[$userAgent]['noindex']
-            // 2. We check for all user-agent
             ?? $this->robotHeadersProperties['*']['noindex']
-            // 3. noindex doesn't exist, so return fasle
             ?? false;
     }
 
