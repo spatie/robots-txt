@@ -101,7 +101,7 @@ class RobotsTxt
      * This works around the fact that parse_url() will not set the 'query' key when the query string is empty.
      * See: https://bugs.php.net/bug.php?id=78385
      */
-    protected function hasEmptyQueryString(string $url) : bool
+    protected function hasEmptyQueryString(string $url): bool
     {
         if ($url === '') {
             return false;
