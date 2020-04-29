@@ -13,6 +13,8 @@ class RobotsMetaTest extends TestCase
 
         $this->assertFalse(RobotsMeta::readFrom(__DIR__.'/data/noindex.html')->mayIndex());
 
+        $this->assertFalse(RobotsMeta::readFrom(__DIR__.'/data/noindex-minified.html')->mayIndex());
+
         $this->assertTrue(RobotsMeta::readFrom(__DIR__.'/data/nofollow.html')->mayIndex());
 
         $this->assertTrue(RobotsMeta::readFrom(__DIR__.'/data/all-allowed.html')->mayIndex());
