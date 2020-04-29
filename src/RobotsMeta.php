@@ -66,12 +66,8 @@ class RobotsMeta
 
     protected function findRobotsMetaTagLine(string $html): ?string
     {
-        $lines = explode(PHP_EOL, $html);
-
-        foreach ($lines as $line) {
-            if (strpos(strtolower(trim($line)), '<meta name="robots"') === 0) {
-                return $line;
-            }
+        if (preg_match('/\<meta name="robots".*?\>/mis', $html, $matches)) {
+            return $matches[0];
         }
 
         return null;
