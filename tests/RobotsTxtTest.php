@@ -117,6 +117,7 @@ class RobotsTxtTest extends TestCase
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
         $this->assertTrue($robots->allows('/', 'UserAgent007'));
+        $this->assertTrue($robots->allows('/', strtolower('UserAgent007')));
     }
 
     /** @test */
@@ -125,5 +126,6 @@ class RobotsTxtTest extends TestCase
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
         $this->assertFalse($robots->allows('/no-agents', 'UserAgent007'));
+        $this->assertFalse($robots->allows('/no-agents', strtolower('UserAgent007')));
     }
 }
