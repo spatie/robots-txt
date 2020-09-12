@@ -2,6 +2,10 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 1.0.8 - 2020-09-12
+
+- make user agent checks case-insensitive
+
 ## 1.0.7 - 2020-04-29
 
 - fix find robots meta tag line if minified code (#23)
