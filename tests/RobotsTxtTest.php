@@ -110,4 +110,22 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/en/admin?print'));
         $this->assertFalse($robots->allows('/en/admin?print=true'));
     }
+
+    /** @test */
+    public function the_allows_user_agent_check_is_case_insensitive()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
+
+        $this->assertTrue($robots->allows('/', 'UserAgent007'));
+        $this->assertTrue($robots->allows('/', strtolower('UserAgent007')));
+    }
+
+    /** @test */
+    public function the_disallows_user_agent_check_is_case_insensitive()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
+
+        $this->assertFalse($robots->allows('/no-agents', 'UserAgent007'));
+        $this->assertFalse($robots->allows('/no-agents', strtolower('UserAgent007')));
+    }
 }

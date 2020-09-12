@@ -50,7 +50,7 @@ class RobotsTxt
             }
         }
 
-        $disallows = $this->disallowsPerUserAgent[$userAgent] ?? $this->disallowsPerUserAgent['*'] ?? [];
+        $disallows = $this->disallowsPerUserAgent[strtolower(trim($userAgent))] ?? $this->disallowsPerUserAgent['*'] ?? [];
 
         return ! $this->pathIsDenied($requestUri, $disallows);
     }
