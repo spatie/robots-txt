@@ -10,3 +10,6 @@ Disallow: /es/admin-disallow/
 User-agent: google
 
 Disallow: /
+User-agent: UserAgent007
+
+Disallow: /no-agents

@@ -110,4 +110,20 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/en/admin?print'));
         $this->assertFalse($robots->allows('/en/admin?print=true'));
     }
+
+    /** @test */
+    public function test_allowed_link_for_title_case_custom_user_agent()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
+
+        $this->assertTrue($robots->allows('/', 'UserAgent007'));
+    }
+
+    /** @test */
+    public function test_disallowed_link_for_title_case_custom_user_agent()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
+
+        $this->assertFalse($robots->allows('/no-agents', 'UserAgent007'));
+    }
 }
