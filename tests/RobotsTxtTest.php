@@ -112,7 +112,7 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
-    public function test_allowed_link_for_title_case_custom_user_agent()
+    public function the_allows_user_agent_check_is_case_insensitive()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
@@ -121,7 +121,7 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
-    public function test_disallowed_link_for_title_case_custom_user_agent()
+    public function the_disallows_user_agent_check_is_case_insensitive()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
