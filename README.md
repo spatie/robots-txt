@@ -10,7 +10,7 @@ Determine if a page may be crawled from robots.txt, robots meta tags and robot h
 
 ## Support us
 
-[![Image](https://github-ads.s3.eu-central-1.amazonaws.com/robots-txt.jpg)](https://spatie.be/github-ad-click/robots-txt)
+[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/robots-txt.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/robots-txt)
 
 We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
 
