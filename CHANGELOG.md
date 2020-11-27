@@ -2,6 +2,10 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 1.0.9 - 2020-11-27
+
+- add support for PHP 8.0 + move to GitHub actions (#27)
+
 ## 1.0.8 - 2020-09-12
 
 - make user agent checks case-insensitive
