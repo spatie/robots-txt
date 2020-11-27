@@ -1,7 +1,7 @@
 # Parse `robots.txt`, `robots` meta and headers
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/robots-txt.svg?style=flat-square)](https://packagist.org/packages/spatie/robots-txt)
-[![Build Status](https://img.shields.io/travis/spatie/robots-txt/master.svg?style=flat-square)](https://travis-ci.org/spatie/robots-txt)
+![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/spatie/robots-txt/run-tests?label=tests)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/robots-txt.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/robots-txt)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/robots-txt.svg?style=flat-square)](https://packagist.org/packages/spatie/robots-txt)
 [![StyleCI](https://styleci.io/repos/122979707/shield?branch=master)](https://styleci.io/repos/122979707)
@@ -40,7 +40,7 @@ You can also specify a user agent:
 $robots = Robots::create('UserAgent007');
 ```
 
-By default, `Robots` will look for a `robots.txt` file on `https://host.com/robots.txt`. 
+By default, `Robots` will look for a `robots.txt` file on `https://host.com/robots.txt`.
 Another location can be specified like so:
 
 ``` php
