@@ -149,12 +149,10 @@ class RobotsTxt
 
             if ($this->isDisallowLine($line)) {
                 $treatAllowDisallowLine = true;
-            }
-            else if ($this->isAllowLine($line)) {
+            } elseif ($this->isAllowLine($line)) {
                 $treatAllowDisallowLine = true;
                 continue;
-            }
-            else {
+            } else {
                 continue;
             }
 
@@ -190,12 +188,12 @@ class RobotsTxt
 
     protected function isDisallowLine(string $line): string
     {
-        return (trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 6), ': ') === 'disall');
+        return trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 6), ': ') === 'disall';
     }
 
     protected function isAllowLine(string $line): string
     {
-        return (trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 6), ': ') === 'allow');
+        return trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 6), ': ') === 'allow';
     }
 
     /**
