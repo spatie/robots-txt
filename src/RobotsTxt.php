@@ -118,41 +118,6 @@ class RobotsTxt
         return false;
     }
 
-    protected function __getDisallowsPerUserAgent(string $content): array
-    {
-        $lines = explode(PHP_EOL, $content);
-
-        $lines = array_filter($lines);
-
-        $disallowsPerUserAgent = [];
-
-        $currentUserAgent = null;
-
-        foreach ($lines as $line) {
-            if ($this->isCommentOrEmptyLine($line)) {
-                continue;
-            }
-
-            if ($this->isUserAgentLine($line)) {
-                $disallowsPerUserAgent[$this->parseUserAgent($line)] = [];
-
-                $currentUserAgent = &$disallowsPerUserAgent[$this->parseUserAgent($line)];
-
-                continue;
-            }
-
-            if ($currentUserAgent === null) {
-                continue;
-            }
-
-            $disallowUrl = $this->parseDisallow($line);
-
-            $currentUserAgent[$disallowUrl] = $disallowUrl;
-        }
-
-        return $disallowsPerUserAgent;
-    }
-
     protected function getDisallowsPerUserAgent(string $content): array
     {
         $lines = explode(PHP_EOL, $content);
