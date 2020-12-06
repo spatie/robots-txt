@@ -118,7 +118,7 @@ class RobotsTxt
         return false;
     }
 
-    protected function getDisallowsPerUserAgent(string $content): array
+    protected function __getDisallowsPerUserAgent(string $content): array
     {
         $lines = explode(PHP_EOL, $content);
 
@@ -129,7 +129,7 @@ class RobotsTxt
         $currentUserAgent = null;
 
         foreach ($lines as $line) {
-            if ($this->isCommentLine($line)) {
+            if ($this->isCommentOrEmptyLine($line)) {
                 continue;
             }
 
@@ -153,9 +153,59 @@ class RobotsTxt
         return $disallowsPerUserAgent;
     }
 
-    protected function isCommentLine(string $line): bool
+    protected function getDisallowsPerUserAgent(string $content): array
     {
-        return strpos(trim($line), '#') === 0;
+        $lines = explode(PHP_EOL, $content);
+
+        $lines = array_filter($lines);
+
+        $disallowsPerUserAgent = [];
+
+        $currentUserAgents = [];
+
+        $treatAllowDisallowLine = false;
+
+        foreach ($lines as $line) {
+            if ($this->isCommentOrEmptyLine($line)) {
+                continue;
+            }
+
+            if ($this->isUserAgentLine($line)) {
+                if ($treatAllowDisallowLine) {
+                    $treatAllowDisallowLine = false;
+                    $currentUserAgents = [];
+                }
+                $disallowsPerUserAgent[$this->parseUserAgent($line)] = [];
+
+                $currentUserAgents[] = &$disallowsPerUserAgent[$this->parseUserAgent($line)];
+
+                continue;
+            }
+
+            if ($this->isDisallowLine($line)) {
+                $treatAllowDisallowLine = true;
+            }
+            else if ($this->isAllowLine($line)) {
+                $treatAllowDisallowLine = true;
+                continue;
+            }
+            else {
+                continue;
+            }
+
+            $disallowUrl = $this->parseDisallow($line);
+
+            foreach ($currentUserAgents as &$currentUserAgent) {
+                $currentUserAgent[$disallowUrl] = $disallowUrl;
+            }
+        }
+
+        return $disallowsPerUserAgent;
+    }
+
+    protected function isCommentOrEmptyLine(string $line): bool
+    {
+        return strpos(trim($line), '#') === 0 || trim($line) === '';
     }
 
     protected function isUserAgentLine(string $line): bool
@@ -171,6 +221,16 @@ class RobotsTxt
     protected function parseDisallow(string $line): string
     {
         return trim(substr_replace(strtolower(trim($line)), '', 0, 8), ': ');
+    }
+
+    protected function isDisallowLine(string $line): string
+    {
+        return (trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 6), ': ') === 'disall');
+    }
+
+    protected function isAllowLine(string $line): string
+    {
+        return (trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 6), ': ') === 'allow');
     }
 
     /**
