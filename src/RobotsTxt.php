@@ -197,7 +197,7 @@ class RobotsTxt
 
     protected function isDisallowLine(string $line): string
     {
-        return trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 6), ': ') === 'disall';
+        return trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 8), ': ') === 'disallow';
     }
 
     protected function isAllowLine(string $line): string
