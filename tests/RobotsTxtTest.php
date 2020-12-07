@@ -130,58 +130,74 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
-    public function it_can_handle_multiple_user_agent()
+    public function it_can_handle_multiple_user_agent_query_strings()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
-        $this->assertFalse($robots->allows('/en/admin?print', 'UserAgent010'));
+        $this->assertFalse($robots->allows('/en/admin?print=true', 'UserAgent010'));
         $this->assertFalse($robots->allows('/en/admin?print=true', 'UserAgent011'));
         $this->assertTrue($robots->allows('/en/admin?print=true', 'UserAgent012'));
         $this->assertTrue($robots->allows('/en/admin?print=true', 'UserAgent013'));
-        $this->assertTrue($robots->allows('/en/admin?print=true', 'UserAgent014'));
-        $this->assertFalse($robots->allows('/en/admin?print=true', 'UserAgent015'));
+    }
+
+    /** @test */
+    public function it_can_handle_multiple_user_agent_root_path()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
         $this->assertTrue($robots->allows('/', 'UserAgent010'));
         $this->assertTrue($robots->allows('/', 'UserAgent011'));
         $this->assertTrue($robots->allows('/', 'UserAgent012'));
         $this->assertTrue($robots->allows('/', 'UserAgent013'));
-        $this->assertTrue($robots->allows('/', 'UserAgent014'));
-        $this->assertFalse($robots->allows('/', 'UserAgent015'));
+    }
+
+    /** @test */
+    public function it_can_handle_multiple_user_agent_first_in_list()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
         $this->assertTrue($robots->allows('/fr/ad', 'UserAgent010'));
         $this->assertFalse($robots->allows('/fr/admin', 'UserAgent010'));
         $this->assertTrue($robots->allows('/fr/admin/', 'UserAgent010'));
         $this->assertTrue($robots->allows('/fr/admin?', 'UserAgent010'));
         $this->assertTrue($robots->allows('/fr/admin?test', 'UserAgent010'));
+    }
+
+    /** @test */
+    public function it_can_handle_multiple_user_agent_last_in_list()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
         $this->assertTrue($robots->allows('/fr/ad', 'UserAgent011'));
         $this->assertFalse($robots->allows('/fr/admin', 'UserAgent011'));
         $this->assertTrue($robots->allows('/fr/admin/', 'UserAgent011'));
         $this->assertTrue($robots->allows('/fr/admin?', 'UserAgent011'));
         $this->assertTrue($robots->allows('/fr/admin?test', 'UserAgent011'));
+    }
+
+    /** @test */
+    public function it_can_handle_multiple_user_agent_first_in_list_with_empty_and_comment_lines()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
         $this->assertTrue($robots->allows('/fr/ad', 'UserAgent012'));
         $this->assertTrue($robots->allows('/fr/admin', 'UserAgent012'));
         $this->assertTrue($robots->allows('/fr/admin/', 'UserAgent012'));
         $this->assertTrue($robots->allows('/fr/admin?', 'UserAgent012'));
         $this->assertTrue($robots->allows('/fr/admin?test', 'UserAgent012'));
+        $this->assertFalse($robots->allows('/es/admin-disallow/', 'UserAgent013'));
+    }
+
+    /** @test */
+    public function it_can_handle_multiple_user_agent_last_in_list_with_empty_and_comment_line()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
         $this->assertTrue($robots->allows('/fr/ad', 'UserAgent013'));
         $this->assertTrue($robots->allows('/fr/admin', 'UserAgent013'));
         $this->assertTrue($robots->allows('/fr/admin/', 'UserAgent013'));
         $this->assertTrue($robots->allows('/fr/admin?', 'UserAgent013'));
         $this->assertTrue($robots->allows('/fr/admin?test', 'UserAgent013'));
-
-        $this->assertTrue($robots->allows('/fr/ad', 'UserAgent014'));
-        $this->assertTrue($robots->allows('/fr/admin', 'UserAgent014'));
-        $this->assertTrue($robots->allows('/fr/admin/', 'UserAgent014'));
-        $this->assertTrue($robots->allows('/fr/admin?', 'UserAgent014'));
-        $this->assertTrue($robots->allows('/fr/admin?test', 'UserAgent014'));
-
-        $this->assertFalse($robots->allows('/fr/ad', 'UserAgent015'));
-        $this->assertFalse($robots->allows('/fr/admin', 'UserAgent015'));
-        $this->assertFalse($robots->allows('/fr/admin/', 'UserAgent015'));
-        $this->assertFalse($robots->allows('/fr/admin?', 'UserAgent015'));
-        $this->assertFalse($robots->allows('/fr/admin?test', 'UserAgent015'));
+        $this->assertFalse($robots->allows('/es/admin-disallow/', 'UserAgent013'));
     }
 }

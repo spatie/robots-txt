@@ -131,7 +131,11 @@ class RobotsTxt
         $treatAllowDisallowLine = false;
 
         foreach ($lines as $line) {
-            if ($this->isCommentOrEmptyLine($line)) {
+            if ($this->isComment($line)) {
+                continue;
+            }
+
+            if ($this->isEmptyLine($line)) {
                 continue;
             }
 
@@ -149,10 +153,10 @@ class RobotsTxt
 
             if ($this->isDisallowLine($line)) {
                 $treatAllowDisallowLine = true;
-            } elseif ($this->isAllowLine($line)) {
+            }
+
+            if ($this->isAllowLine($line)) {
                 $treatAllowDisallowLine = true;
-                continue;
-            } else {
                 continue;
             }
 
@@ -166,9 +170,14 @@ class RobotsTxt
         return $disallowsPerUserAgent;
     }
 
-    protected function isCommentOrEmptyLine(string $line): bool
+    protected function isComment(string $line): bool
     {
-        return strpos(trim($line), '#') === 0 || trim($line) === '';
+        return strpos(trim($line), '#') === 0;
+    }
+
+    protected function isEmptyLine(string $line): bool
+    {
+        return trim($line) === '';
     }
 
     protected function isUserAgentLine(string $line): bool
