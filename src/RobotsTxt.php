@@ -126,36 +126,58 @@ class RobotsTxt
 
         $disallowsPerUserAgent = [];
 
-        $currentUserAgent = null;
+        $currentUserAgents = [];
+
+        $treatAllowDisallowLine = false;
 
         foreach ($lines as $line) {
-            if ($this->isCommentLine($line)) {
+            if ($this->isComment($line)) {
+                continue;
+            }
+
+            if ($this->isEmptyLine($line)) {
                 continue;
             }
 
             if ($this->isUserAgentLine($line)) {
+                if ($treatAllowDisallowLine) {
+                    $treatAllowDisallowLine = false;
+                    $currentUserAgents = [];
+                }
                 $disallowsPerUserAgent[$this->parseUserAgent($line)] = [];
 
-                $currentUserAgent = &$disallowsPerUserAgent[$this->parseUserAgent($line)];
+                $currentUserAgents[] = &$disallowsPerUserAgent[$this->parseUserAgent($line)];
 
                 continue;
             }
 
-            if ($currentUserAgent === null) {
+            if ($this->isDisallowLine($line)) {
+                $treatAllowDisallowLine = true;
+            }
+
+            if ($this->isAllowLine($line)) {
+                $treatAllowDisallowLine = true;
                 continue;
             }
 
             $disallowUrl = $this->parseDisallow($line);
 
-            $currentUserAgent[$disallowUrl] = $disallowUrl;
+            foreach ($currentUserAgents as &$currentUserAgent) {
+                $currentUserAgent[$disallowUrl] = $disallowUrl;
+            }
         }
 
         return $disallowsPerUserAgent;
     }
 
-    protected function isCommentLine(string $line): bool
+    protected function isComment(string $line): bool
     {
         return strpos(trim($line), '#') === 0;
+    }
+
+    protected function isEmptyLine(string $line): bool
+    {
+        return trim($line) === '';
     }
 
     protected function isUserAgentLine(string $line): bool
@@ -171,6 +193,16 @@ class RobotsTxt
     protected function parseDisallow(string $line): string
     {
         return trim(substr_replace(strtolower(trim($line)), '', 0, 8), ': ');
+    }
+
+    protected function isDisallowLine(string $line): string
+    {
+        return trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 8), ': ') === 'disallow';
+    }
+
+    protected function isAllowLine(string $line): string
+    {
+        return trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 6), ': ') === 'allow';
     }
 
     /**
