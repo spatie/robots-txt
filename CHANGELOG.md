@@ -2,6 +2,10 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 1.0.10 - 2020-12-08
+
+- handle multiple user-agent (#29)
+
 ## 1.0.9 - 2020-11-27
 
 - add support for PHP 8.0 + move to GitHub actions (#27)
