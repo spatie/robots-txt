@@ -4,7 +4,6 @@
 ![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/spatie/robots-txt/run-tests?label=tests)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/robots-txt.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/robots-txt)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/robots-txt.svg?style=flat-square)](https://packagist.org/packages/spatie/robots-txt)
-[![StyleCI](https://styleci.io/repos/122979707/shield?branch=master)](https://styleci.io/repos/122979707)
 
 Determine if a page may be crawled from robots.txt, robots meta tags and robot headers.
 
