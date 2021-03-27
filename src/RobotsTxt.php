@@ -157,6 +157,7 @@ class RobotsTxt
 
             if ($this->isAllowLine($line)) {
                 $treatAllowDisallowLine = true;
+
                 continue;
             }
 
