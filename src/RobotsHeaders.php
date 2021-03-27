@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 class RobotsHeaders
 {
-    protected $robotHeadersProperties = [];
+    protected array $robotHeadersProperties = [];
 
     public static function readFrom(string $source): self
     {
