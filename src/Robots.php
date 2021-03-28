@@ -4,16 +4,12 @@ namespace Spatie\Robots;
 
 class Robots
 {
-    /** @var string|null */
-    protected $userAgent;
+    protected RobotsTxt | null $robotsTxt;
 
-    /** @var \Spatie\Robots\RobotsTxt|null */
-    protected $robotsTxt;
-
-    public function __construct(string $userAgent = null, string $source = null)
-    {
-        $this->userAgent = $userAgent;
-
+    public function __construct(
+        protected string | null $userAgent = null,
+        string | null $source = null,
+    ) {
         $this->robotsTxt = $source
             ? RobotsTxt::readFrom($source)
             : null;

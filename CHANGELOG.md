@@ -2,6 +2,14 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.0.0 - unreleased
+
+- require PHP 8+
+- drop support for PHP 7.x
+- convert syntax to PHP 8
+- remove deprecated methods
+- use php-cs-fixer & github workflow
+
 ## 1.0.10 - 2020-12-08
 
 - handle multiple user-agent (#29)
