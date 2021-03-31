@@ -31,12 +31,12 @@ class RobotsHeaders
 
     public function mayIndex(string $userAgent = '*'): bool
     {
-        return ! $this->noindex($userAgent);
+        return $this->nonone($userAgent) ? false : ! $this->noindex($userAgent);
     }
 
     public function mayFollow(string $userAgent = '*'): bool
     {
-        return ! $this->nofollow($userAgent);
+        return  $this->nonone($userAgent) ? false : ! $this->nofollow($userAgent);
     }
 
     public function noindex(string $userAgent = '*'): bool
@@ -52,6 +52,14 @@ class RobotsHeaders
         return
             $this->robotHeadersProperties[$userAgent]['nofollow']
             ?? $this->robotHeadersProperties['*']['nofollow']
+            ?? false;
+    }
+
+    public function nonone(string $userAgent = '*'): bool
+    {
+        return 
+            $this->robotHeadersProperties[$userAgent]['none']
+            ?? $this->robotHeadersProperties['*']['none']
             ?? false;
     }
 
@@ -73,6 +81,7 @@ class RobotsHeaders
             $parsedHeaders[$userAgent] = [
                 'noindex' => strpos(strtolower($options), 'noindex') !== false,
                 'nofollow' => strpos(strtolower($options), 'nofollow') !== false,
+                'none' => strpos(strtolower($options), 'none') !== false,
             ];
 
             return $parsedHeaders;

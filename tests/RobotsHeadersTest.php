@@ -25,6 +25,38 @@ class RobotsHeadersTest extends TestCase
     }
 
     /** @test */
+    public function it_can_parse_headers_with_none()
+    {
+        $robots = RobotsHeaders::create([
+            'X-custom: test',
+            'X-Robots-Tag: google: none',
+        ]);
+
+        $this->assertTrue($robots->mayIndex());
+        $this->assertTrue($robots->mayFollow());
+
+        $this->assertFalse($robots->mayIndex('google'));
+        $this->assertFalse($robots->mayFollow('google'));
+
+        $this->assertTrue($robots->mayIndex('other-bot'));
+        $this->assertTrue($robots->mayFollow('other-bot'));
+
+        $robots = RobotsHeaders::create([
+            'X-custom: test',
+            'X-Robots-Tag: none',
+        ]);
+
+        $this->assertFalse($robots->mayIndex());
+        $this->assertFalse($robots->mayFollow());
+
+        $this->assertFalse($robots->mayIndex('google'));
+        $this->assertFalse($robots->mayFollow('google'));
+
+        $this->assertFalse($robots->mayIndex('other-bot'));
+        $this->assertFalse($robots->mayFollow('other-bot'));
+    }
+
+    /** @test */
     public function it_throws_exception_on_reading_source()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -58,5 +90,21 @@ class RobotsHeadersTest extends TestCase
 
         $this->assertFalse($robots->mayIndex('google'));
         $this->assertFalse($robots->mayFollow('google'));
+
+        $robots = RobotsHeaders::readFrom($this->getLocalTestServerUrl('/none'));
+
+        $this->assertFalse($robots->mayIndex());
+        $this->assertFalse($robots->mayFollow());
+
+        $this->assertFalse($robots->mayIndex('google'));
+        $this->assertFalse($robots->mayFollow('google'));
+
+        $robots = RobotsHeaders::readFrom($this->getLocalTestServerUrl('/none-google'));
+
+        $this->assertFalse($robots->mayIndex('google'));
+        $this->assertFalse($robots->mayFollow('google'));
+
+        $this->assertTrue($robots->mayIndex());
+        $this->assertTrue($robots->mayFollow());
     }
 }
