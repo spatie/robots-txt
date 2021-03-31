@@ -31,12 +31,12 @@ class RobotsHeaders
 
     public function mayIndex(string $userAgent = '*'): bool
     {
-        return $this->nonone($userAgent) ? false : ! $this->noindex($userAgent);
+        return $this->none($userAgent) ? false : ! $this->noindex($userAgent);
     }
 
     public function mayFollow(string $userAgent = '*'): bool
     {
-        return  $this->nonone($userAgent) ? false : ! $this->nofollow($userAgent);
+        return  $this->none($userAgent) ? false : ! $this->nofollow($userAgent);
     }
 
     public function noindex(string $userAgent = '*'): bool
@@ -55,7 +55,7 @@ class RobotsHeaders
             ?? false;
     }
 
-    public function nonone(string $userAgent = '*'): bool
+    public function none(string $userAgent = '*'): bool
     {
         return 
             $this->robotHeadersProperties[$userAgent]['none']

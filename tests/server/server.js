@@ -27,7 +27,7 @@ app.get('/nofollow-noindex-google', function (req, res) {
 });
 
 app.get('/none', function (req, res) {
-    console.log('Request at /nofollow-noindex');
+    console.log('Request at /none');
 
     res.writeHead(200, { 'X-Robots-Tag': 'none' });
 
@@ -35,7 +35,7 @@ app.get('/none', function (req, res) {
 });
 
 app.get('/none-google', function (req, res) {
-    console.log('Request at /nofollow-noindex');
+    console.log('Request at /none-google');
 
     res.writeHead(200, { 'X-Robots-Tag': 'google: none' });
 
