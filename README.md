@@ -26,7 +26,7 @@ composer require spatie/robots-txt
 ## Usage
 
 ``` php
-$robots = Robots::create();
+$robots = Spatie\Robots\Robots::create();
 
 $robots->mayIndex('https://www.spatie.be/nl/admin');
 
@@ -36,17 +36,17 @@ $robots->mayFollowOn('https://www.spatie.be/nl/admin');
 You can also specify a user agent:
 
 ``` php
-$robots = Robots::create('UserAgent007');
+$robots = Spatie\Robots\Robots::create('UserAgent007');
 ```
 
 By default, `Robots` will look for a `robots.txt` file on `https://host.com/robots.txt`.
 Another location can be specified like so:
 
 ``` php
-$robots = Robots::create()
+$robots = Spatie\Robots\Robots::create()
     ->withTxt('https://www.spatie.be/robots-custom.txt');
 
-$robots = Robots::create()
+$robots = Spatie\Robots\Robots::create()
     ->withTxt(__DIR__ . '/public/robots.txt');
 ```
 
