@@ -2,6 +2,10 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.0.1 - 2021-05-06
+
+- added x-robots-tag: none (#32)
+
 ## 2.0.0 - 2021-03-28
 
 - require PHP 8+
