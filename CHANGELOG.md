@@ -2,6 +2,18 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.0.2 - 2022-05-18
+
+## What's Changed
+
+- Match meta tag for single quotes, often used by Wordpress sites by @gjportegies in https://github.com/spatie/robots-txt/pull/35
+
+## New Contributors
+
+- @gjportegies made their first contribution in https://github.com/spatie/robots-txt/pull/35
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.0.1...2.0.2
+
 ## 2.0.1 - 2021-05-06
 
 - added x-robots-tag: none (#32)
