@@ -182,27 +182,27 @@ class RobotsTxt
 
     protected function isUserAgentLine(string $line): bool
     {
-        return strpos(trim(strtolower($line)), 'user-agent') === 0;
+        return strpos(trim(strtolower($line) ?? ''), 'user-agent') === 0;
     }
 
     protected function parseUserAgent(string $line): string
     {
-        return trim(str_replace('user-agent', '', strtolower(trim($line))), ': ');
+        return trim(str_replace('user-agent', '', strtolower(trim($line ?? ''))), ': ');
     }
 
     protected function parseDisallow(string $line): string
     {
-        return trim(substr_replace(strtolower(trim($line)), '', 0, 8), ': ');
+        return trim(substr_replace(strtolower(trim($line ?? '')), '', 0, 8), ': ');
     }
 
     protected function isDisallowLine(string $line): string
     {
-        return trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 8), ': ') === 'disallow';
+        return trim(substr(str_replace(' ', '', strtolower(trim($line ?? ''))), 0, 8), ': ') === 'disallow';
     }
 
     protected function isAllowLine(string $line): string
     {
-        return trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 6), ': ') === 'allow';
+        return trim(substr(str_replace(' ', '', strtolower(trim($line ?? ''))), 0, 6), ': ') === 'allow';
     }
 
     /**
