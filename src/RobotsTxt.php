@@ -50,7 +50,7 @@ class RobotsTxt
             }
         }
 
-        $disallows = $this->disallowsPerUserAgent[strtolower(trim($userAgent))] ?? $this->disallowsPerUserAgent['*'] ?? [];
+        $disallows = $this->disallowsPerUserAgent[strtolower(trim($userAgent ?? ''))] ?? $this->disallowsPerUserAgent['*'] ?? [];
 
         return ! $this->pathIsDenied($requestUri, $disallows);
     }
@@ -172,12 +172,12 @@ class RobotsTxt
 
     protected function isComment(string $line): bool
     {
-        return strpos(trim($line), '#') === 0;
+        return strpos(trim($line ?? ''), '#') === 0;
     }
 
     protected function isEmptyLine(string $line): bool
     {
-        return trim($line) === '';
+        return trim($line ?? '') === '';
     }
 
     protected function isUserAgentLine(string $line): bool
