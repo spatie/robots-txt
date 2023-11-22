@@ -2,6 +2,22 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.0.3 - 2023-11-22
+
+### What's Changed
+
+- Update .gitattributes and ignore php_cs cache by @angeljqv in https://github.com/spatie/robots-txt/pull/36
+- Update PHPUnit config to latest schema by @patinthehat in https://github.com/spatie/robots-txt/pull/39
+- Add PHP 8.2 Support by @patinthehat in https://github.com/spatie/robots-txt/pull/38
+- Fix deprecation message by @buismaarten in https://github.com/spatie/robots-txt/pull/41
+
+### New Contributors
+
+- @angeljqv made their first contribution in https://github.com/spatie/robots-txt/pull/36
+- @buismaarten made their first contribution in https://github.com/spatie/robots-txt/pull/41
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.0.2...2.0.3
+
 ## 2.0.2 - 2022-05-18
 
 ## What's Changed
