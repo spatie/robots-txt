@@ -8,11 +8,15 @@ class Robots
 
     public function __construct(
         protected string | null $userAgent = null,
-        string | null $source = null,
+        RobotsTxt | string | null $source = null,
     ) {
-        $this->robotsTxt = $source
-            ? RobotsTxt::readFrom($source)
-            : null;
+        if ($source instanceof RobotsTxt) {
+            $this->robotsTxt = $source;
+        } elseif (is_string($source)) {
+            $this->robotsTxt = RobotsTxt::readFrom($source);
+        } else {
+            $this->robotsTxt = null;
+        }
     }
 
     public function withTxt(string $source): self
