@@ -19,9 +19,11 @@ class Robots
         }
     }
 
-    public function withTxt(string $source): self
+    public function withTxt(RobotsTxt | string $source): self
     {
-        $this->robotsTxt = RobotsTxt::readFrom($source);
+        $this->robotsTxt = $source instanceof RobotsTxt
+                                ? $source
+                                : RobotsTxt::readFrom($source);
 
         return $this;
     }
