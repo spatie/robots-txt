@@ -8,6 +8,38 @@ class RobotsTxt
 
     protected array $disallowsPerUserAgent = [];
 
+    protected bool $matchExactly = true;
+
+    protected bool $includeGlobalGroup = true;
+
+    public function ignoreGlobalGroup(): self
+    {
+        $this->includeGlobalGroup = false;
+
+        return $this;
+    }
+
+    public function includeGlobalGroup(): self
+    {
+        $this->includeGlobalGroup = true;
+
+        return $this;
+    }
+
+    public function withPartialMatches(): self
+    {
+        $this->matchExactly = false;
+
+        return $this;
+    }
+
+    public function exactMatchesOnly(): self
+    {
+        $this->matchExactly = true;
+
+        return $this;
+    }
+
     public static function readFrom(string $source): self
     {
         $content = @file_get_contents($source);
@@ -50,9 +82,37 @@ class RobotsTxt
             }
         }
 
-        $disallows = $this->disallowsPerUserAgent[strtolower(trim($userAgent ?? ''))] ?? $this->disallowsPerUserAgent['*'] ?? [];
+        $disallowsPerUserAgent = $this->includeGlobalGroup
+            ? $this->disallowsPerUserAgent 
+            : array_filter($this->disallowsPerUserAgent, fn ($key) => $key !== '*', ARRAY_FILTER_USE_KEY);
+        
+        $normalizedUserAgent = strtolower(trim($userAgent ?? ''));
+            
+        $disallows = $this->matchExactly
+            ? $this->getDisallowsExactly($normalizedUserAgent, $disallowsPerUserAgent)
+            : $this->getDisallowsContaining($normalizedUserAgent, $disallowsPerUserAgent);
 
         return ! $this->pathIsDenied($requestUri, $disallows);
+    }
+
+    protected function getDisallowsExactly(string $userAgent, array $disallowsPerUserAgent): array
+    {
+        return $disallowsPerUserAgent[$userAgent] ?? $disallowsPerUserAgent['*'] ?? [];
+    }
+
+    protected function getDisallowsContaining(string $userAgent, array $disallowsPerUserAgent): array
+    {
+        $disallows = [];
+
+        foreach ($disallowsPerUserAgent as $userAgentKey => $disallowsPerUserAgentKey) {
+            $contains = strpos($userAgent, $userAgentKey) !== false;
+
+            if ($contains || $userAgentKey === '*') {
+                $disallows = [...$disallows, ...$disallowsPerUserAgentKey];
+            }
+        }
+
+        return $disallows;
     }
 
     protected function pathIsDenied(string $requestUri, array $disallows): bool
