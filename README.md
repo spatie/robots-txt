@@ -1,7 +1,7 @@
 # Parse `robots.txt`, `robots` meta and headers
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/robots-txt.svg?style=flat-square)](https://packagist.org/packages/spatie/robots-txt)
-![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/spatie/robots-txt/run-tests?label=tests)
+[![Tests](https://github.com/spatie/robots-txt/actions/workflows/run-tests.yml/badge.svg)](https://github.com/spatie/robots-txt/actions/workflows/run-tests.yml)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/robots-txt.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/robots-txt)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/robots-txt.svg?style=flat-square)](https://packagist.org/packages/spatie/robots-txt)
 
