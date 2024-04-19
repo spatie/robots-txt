@@ -2,6 +2,18 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.1.0 - 2024-04-19
+
+### What's Changed
+
+* Add some efficiencies to prevent unnecessary requests by @tsjason in https://github.com/spatie/robots-txt/pull/42
+
+### New Contributors
+
+* @tsjason made their first contribution in https://github.com/spatie/robots-txt/pull/42
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.0.3...2.1.0
+
 ## 2.0.3 - 2023-11-22
 
 ### What's Changed
