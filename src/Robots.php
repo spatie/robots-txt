@@ -8,16 +8,22 @@ class Robots
 
     public function __construct(
         protected string | null $userAgent = null,
-        string | null $source = null,
+        RobotsTxt | string | null $source = null,
     ) {
-        $this->robotsTxt = $source
-            ? RobotsTxt::readFrom($source)
-            : null;
+        if ($source instanceof RobotsTxt) {
+            $this->robotsTxt = $source;
+        } elseif (is_string($source)) {
+            $this->robotsTxt = RobotsTxt::readFrom($source);
+        } else {
+            $this->robotsTxt = null;
+        }
     }
 
-    public function withTxt(string $source): self
+    public function withTxt(RobotsTxt | string $source): self
     {
-        $this->robotsTxt = RobotsTxt::readFrom($source);
+        $this->robotsTxt = $source instanceof RobotsTxt
+                                ? $source
+                                : RobotsTxt::readFrom($source);
 
         return $this;
     }
@@ -33,17 +39,29 @@ class Robots
 
         $robotsTxt = $this->robotsTxt ?? RobotsTxt::create($this->createRobotsUrl($url));
 
+        $content = @file_get_contents($url);
+
+        if ($content === false) {
+            throw new InvalidArgumentException("Could not read url `{$url}`");
+        }
+
         return
             $robotsTxt->allows($url, $userAgent)
-            && RobotsMeta::readFrom($url)->mayIndex()
-            && RobotsHeaders::readFrom($url)->mayIndex();
+            && RobotsMeta::create($content)->mayIndex()
+            && RobotsHeaders::create($http_response_header ?? [])->mayIndex();
     }
 
     public function mayFollowOn(string $url): bool
     {
+        $content = @file_get_contents($url);
+
+        if ($content === false) {
+            throw new InvalidArgumentException("Could not read url `{$url}`");
+        }
+
         return
-            RobotsMeta::readFrom($url)->mayFollow()
-            && RobotsHeaders::readFrom($url)->mayFollow();
+            RobotsMeta::create($content)->mayFollow()
+            && RobotsHeaders::create($http_response_header ?? [])->mayFollow();
     }
 
     protected function createRobotsUrl(string $url): string

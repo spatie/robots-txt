@@ -3,6 +3,7 @@
 namespace Spatie\Robots\Tests;
 
 use Spatie\Robots\Robots;
+use Spatie\Robots\RobotsTxt;
 
 class RobotsTest extends TestCase
 {
@@ -11,6 +12,16 @@ class RobotsTest extends TestCase
     {
         $robots = Robots::create()
             ->withTxt(__DIR__.'/data/robots.txt');
+
+        $this->assertTrue($robots->mayIndex('/'));
+    }
+
+    /** @test */
+    public function it_can_be_created_with_a_robots_txt_object()
+    {
+        $robotsTxt = RobotsTxt::create(__DIR__.'/data/robots.txt');
+        $robots = Robots::create()
+            ->withTxt($robotsTxt);
 
         $this->assertTrue($robots->mayIndex('/'));
     }
