@@ -5,3 +5,4 @@ vendor
 coverage
 tests/server/package-lock.json
 .php_cs.cache
+.phpunit.cache
