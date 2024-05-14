@@ -2,6 +2,18 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.2.0 - 2024-04-22
+
+### What's Changed
+
+* optionally allow partial matches and global groups by @resohead in https://github.com/spatie/robots-txt/pull/43
+
+### New Contributors
+
+* @resohead made their first contribution in https://github.com/spatie/robots-txt/pull/43
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.1.0...2.2.0
+
 ## 2.1.0 - 2024-04-19
 
 ### What's Changed
