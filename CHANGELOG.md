@@ -2,6 +2,18 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.2.1 - 2024-08-09
+
+### What's Changed
+
+* Add missing use statement for InvalidArgumentException by @remcom in https://github.com/spatie/robots-txt/pull/44
+
+### New Contributors
+
+* @remcom made their first contribution in https://github.com/spatie/robots-txt/pull/44
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.2.0...2.2.1
+
 ## 2.2.0 - 2024-04-22
 
 ### What's Changed
