@@ -2,6 +2,8 @@
 
 namespace Spatie\Robots;
 
+use InvalidArgumentException;
+
 class Robots
 {
     protected RobotsTxt | null $robotsTxt;
