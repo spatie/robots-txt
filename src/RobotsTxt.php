@@ -253,7 +253,7 @@ class RobotsTxt
 
     protected function parseDisallow(string $line): string
     {
-        return trim(substr_replace(strtolower(trim($line)), '', 0, 8), ': ');
+        return trim(substr_replace(trim($line), '', 0, 8), ': ');
     }
 
     protected function isDisallowLine(string $line): string
