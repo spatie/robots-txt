@@ -64,7 +64,7 @@ class RobotsTxt
         return new self($source);
     }
 
-    public function allows(string $url, string | null $userAgent = '*'): bool
+    public function allows(string $url, ?string $userAgent = '*'): bool
     {
         $requestUri = '';
 
@@ -83,11 +83,11 @@ class RobotsTxt
         }
 
         $disallowsPerUserAgent = $this->includeGlobalGroup
-            ? $this->disallowsPerUserAgent 
+            ? $this->disallowsPerUserAgent
             : array_filter($this->disallowsPerUserAgent, fn ($key) => $key !== '*', ARRAY_FILTER_USE_KEY);
-        
+
         $normalizedUserAgent = strtolower(trim($userAgent ?? ''));
-            
+
         $disallows = $this->matchExactly
             ? $this->getDisallowsExactly($normalizedUserAgent, $disallowsPerUserAgent)
             : $this->getDisallowsContaining($normalizedUserAgent, $disallowsPerUserAgent);

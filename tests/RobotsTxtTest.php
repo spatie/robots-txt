@@ -52,7 +52,7 @@ class RobotsTxtTest extends TestCase
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
 
         $this->assertFalse($robots->allows('/test', 'google'));
-        
+
         $this->assertTrue($robots
             ->exactMatchesOnly()
             ->allows('/no-agents', 'Mozilla/5.0 (compatible; UserAgent007/1.1)')
@@ -61,7 +61,7 @@ class RobotsTxtTest extends TestCase
             ->withPartialMatches()
             ->allows('/no-agents', 'Mozilla/5.0 (compatible; UserAgent007/1.1)')
         );
-        
+
         $this->assertTrue($robots
             ->ignoreGlobalGroup()
             ->withPartialMatches()

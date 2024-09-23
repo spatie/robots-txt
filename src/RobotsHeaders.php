@@ -36,7 +36,7 @@ class RobotsHeaders
 
     public function mayFollow(string $userAgent = '*'): bool
     {
-        return  $this->none($userAgent) ? false : ! $this->nofollow($userAgent);
+        return $this->none($userAgent) ? false : ! $this->nofollow($userAgent);
     }
 
     public function noindex(string $userAgent = '*'): bool
@@ -57,7 +57,7 @@ class RobotsHeaders
 
     public function none(string $userAgent = '*'): bool
     {
-        return 
+        return
             $this->robotHeadersProperties[$userAgent]['none']
             ?? $this->robotHeadersProperties['*']['none']
             ?? false;

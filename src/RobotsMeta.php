@@ -50,7 +50,7 @@ class RobotsMeta
         return $this->robotsMetaTagProperties['nofollow'] ?? false;
     }
 
-    #[ArrayShape(['noindex' => "bool", 'nofollow' => "bool"])]
+    #[ArrayShape(['noindex' => 'bool', 'nofollow' => 'bool'])]
     protected function findRobotsMetaTagProperties(string $html): array
     {
         $metaTagLine = $this->findRobotsMetaTagLine($html);
