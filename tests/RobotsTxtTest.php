@@ -150,6 +150,15 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
+    public function the_disallows_uri_check_is_case_sensitive()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
+
+        $this->assertFalse($robots->allows('/Case-Sensitive/Disallow'));
+        $this->assertTrue($robots->allows(strtolower('/Case-Sensitive/Disallow')));
+    }
+
+    /** @test */
     public function it_can_handle_multiple_user_agent_query_strings()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
