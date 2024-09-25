@@ -2,6 +2,21 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.2.2 - 2024-09-25
+
+### What's Changed
+
+* Bump actions/checkout from 2 to 4 by @dependabot in https://github.com/spatie/robots-txt/pull/47
+* Bump stefanzweifel/git-auto-commit-action from 4 to 5 by @dependabot in https://github.com/spatie/robots-txt/pull/48
+* Fixes "case-sensitive" URI matching for Disallow rules in robots.txt by @mattfo0 in https://github.com/spatie/robots-txt/pull/46
+
+### New Contributors
+
+* @dependabot made their first contribution in https://github.com/spatie/robots-txt/pull/47
+* @mattfo0 made their first contribution in https://github.com/spatie/robots-txt/pull/46
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.2.1...2.2.2
+
 ## 2.2.1 - 2024-08-09
 
 ### What's Changed
