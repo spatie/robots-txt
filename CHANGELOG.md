@@ -2,6 +2,18 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.2.3 - 2024-10-22
+
+### What's Changed
+
+* avoid expensive queries that do not change certain results by @elcapo in https://github.com/spatie/robots-txt/pull/53
+
+### New Contributors
+
+* @elcapo made their first contribution in https://github.com/spatie/robots-txt/pull/53
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.2.2...2.2.3
+
 ## 2.2.2 - 2024-09-25
 
 ### What's Changed
