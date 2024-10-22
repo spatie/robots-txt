@@ -41,15 +41,17 @@ class Robots
 
         $robotsTxt = $this->robotsTxt ?? RobotsTxt::create($this->createRobotsUrl($url));
 
+        if (! $robotsTxt->allows($url, $userAgent)) {
+            return false;
+        }
+
         $content = @file_get_contents($url);
 
         if ($content === false) {
             throw new InvalidArgumentException("Could not read url `{$url}`");
         }
 
-        return
-            $robotsTxt->allows($url, $userAgent)
-            && RobotsMeta::create($content)->mayIndex()
+        return RobotsMeta::create($content)->mayIndex()
             && RobotsHeaders::create($http_response_header ?? [])->mayIndex();
     }
 
