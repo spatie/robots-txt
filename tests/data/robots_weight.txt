@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /no
+Allow: /se
+Allow: /n
+Allow: /nb
+Allow: /nb/
+Allow: /nb/r
+Allow: /en
+Allow: /nn
+Allow: /sitemap.xml
+Disallow: /

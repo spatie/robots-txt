@@ -8,6 +8,11 @@ Disallow: /en/admin/*
 Disallow: /fr/admin$
 Disallow: /es/admin-disallow/
 Disallow: /Case-Sensitive/Disallow
+Disallow: /abc/123*
+Allow: /abc/1234/explicit.html
+Allow: /aasdasbcasd/sad1asd234/random.html
+Allow: /aasdasbcasd/sad1asd234/random123.html
+
 User-agent: google
 
 Disallow: /
@@ -35,3 +40,11 @@ Allow: /fr/admin$
 
 #comment
 Disallow: /es/admin-disallow/
+
+
+
+User-agent: only-me
+Disallow: /xyz/123*
+Allow: /xyz/1234/explicit.html
+Allow: /aasdasbcasd/sad1asd234/random.html
+

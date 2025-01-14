@@ -50,6 +50,7 @@ class RobotsTxt
     public function __construct(string $content)
     {
         $this->disallowsPerUserAgent = $this->getDisallowsPerUserAgent($content);
+        $this->allowsPerUserAgent = $this->getAllowsPerUserAgent($content);
     }
 
     public static function create(string $source): self
@@ -76,7 +77,7 @@ class RobotsTxt
             }
 
             if (isset($parts['query'])) {
-                $requestUri .= '?'.$parts['query'];
+                $requestUri .= '?' . $parts['query'];
             } elseif ($this->hasEmptyQueryString($url)) {
                 $requestUri .= '?';
             }
@@ -84,7 +85,11 @@ class RobotsTxt
 
         $disallowsPerUserAgent = $this->includeGlobalGroup
             ? $this->disallowsPerUserAgent
-            : array_filter($this->disallowsPerUserAgent, fn ($key) => $key !== '*', ARRAY_FILTER_USE_KEY);
+            : array_filter($this->disallowsPerUserAgent, fn($key) => $key !== '*', ARRAY_FILTER_USE_KEY);
+
+        $allowsPerUserAgent = $this->includeGlobalGroup
+            ? $this->allowsPerUserAgent
+            : array_filter($this->allowsPerUserAgent, fn($key) => $key !== '*', ARRAY_FILTER_USE_KEY);
 
         $normalizedUserAgent = strtolower(trim($userAgent ?? ''));
 
@@ -92,7 +97,38 @@ class RobotsTxt
             ? $this->getDisallowsExactly($normalizedUserAgent, $disallowsPerUserAgent)
             : $this->getDisallowsContaining($normalizedUserAgent, $disallowsPerUserAgent);
 
-        return ! $this->pathIsDenied($requestUri, $disallows);
+        $allows = $this->matchExactly
+            ? $this->getDisallowsExactly($normalizedUserAgent, $allowsPerUserAgent)
+            : $this->getDisallowsContaining($normalizedUserAgent, $allowsPerUserAgent);
+
+        if ($this->pathIsExplicitAllowed($url, $allows)) {
+            return true;
+        }
+
+        $isDenied = $this->pathIsDenied($requestUri, $disallows);
+        if ($isDenied) {
+            $isAllowedWeight = $this->pathMatchWeight($requestUri, $allows);
+            if ($isAllowedWeight === 0) {
+                return false;
+            }
+            $isDisallowedWeight = $this->pathMatchWeight($requestUri, $disallows);
+
+            return $isAllowedWeight > $isDisallowedWeight;
+        }
+
+        return !$isDenied;
+    }
+
+    protected function pathMatchWeight(string $requestUri, array $itemsPerUseragent): int
+    {
+        $weight = 0;
+        foreach ($itemsPerUseragent as $item => $strlen) {
+            $startsWith = str_starts_with($requestUri, $item);
+            if ($startsWith && $strlen > $weight) {
+                $weight = (int)$strlen;
+            }
+        }
+        return $weight;
     }
 
     protected function getDisallowsExactly(string $userAgent, array $disallowsPerUserAgent): array
@@ -115,9 +151,15 @@ class RobotsTxt
         return $disallows;
     }
 
+    protected function pathIsExplicitAllowed(string $requestUri, array $allows): bool
+    {
+        return in_array($requestUri, array_keys($allows));
+    }
+
+
     protected function pathIsDenied(string $requestUri, array $disallows): bool
     {
-        foreach ($disallows as $disallow) {
+        foreach ($disallows as $disallow => $value) {
             if ($disallow === '') {
                 continue;
             }
@@ -134,7 +176,7 @@ class RobotsTxt
             $disallowRegexp = preg_quote($disallow, '/');
 
             // the pattern must start at the beginning of the string...
-            $disallowRegexp = '^'.$disallowRegexp;
+            $disallowRegexp = '^' . $disallowRegexp;
 
             // ...and optionally stop at the end of the string
             if ($stopAtEndOfString) {
@@ -145,7 +187,7 @@ class RobotsTxt
             $disallowRegexp = str_replace('\\*', '.*', $disallowRegexp);
 
             // enclose in delimiters
-            $disallowRegexp = '/'.$disallowRegexp.'/';
+            $disallowRegexp = '/' . $disallowRegexp . '/';
 
             if (preg_match($disallowRegexp, $requestUri) === 1) {
                 return true;
@@ -224,11 +266,67 @@ class RobotsTxt
             $disallowUrl = $this->parseDisallow($line);
 
             foreach ($currentUserAgents as &$currentUserAgent) {
-                $currentUserAgent[$disallowUrl] = $disallowUrl;
+                $currentUserAgent[$disallowUrl] = strlen($disallowUrl);
             }
         }
 
         return $disallowsPerUserAgent;
+    }
+
+    protected function getAllowsPerUserAgent(string $content): array
+    {
+        $lines = explode(PHP_EOL, $content);
+
+        $lines = array_filter($lines);
+
+        $allowsPerUserAgent = [];
+
+        $currentUserAgents = [];
+
+        $treatAllowDisallowLine = false;
+
+        foreach ($lines as $line) {
+            if ($this->isComment($line)) {
+                continue;
+            }
+
+            if ($this->isEmptyLine($line)) {
+                continue;
+            }
+
+            if ($this->isUserAgentLine($line)) {
+                if ($treatAllowDisallowLine) {
+                    $treatAllowDisallowLine = false;
+                    $currentUserAgents = [];
+                }
+                $allowsPerUserAgent[$this->parseUserAgent($line)] = [];
+
+                $currentUserAgents[] = &$allowsPerUserAgent[$this->parseUserAgent($line)];
+
+                continue;
+            }
+
+            if ($this->isDisallowLine($line)) {
+                $treatAllowDisallowLine = true;
+                continue;
+            }
+
+            if ($this->isAllowLine($line)) {
+                $treatAllowDisallowLine = true;
+
+
+            }
+
+            $allowUrl = $this->parseAllow($line);
+
+            foreach ($currentUserAgents as &$currentUserAgent) {
+                $currentUserAgent[$allowUrl] = strlen($allowUrl);
+            }
+        }
+        $allowsPerUserAgent = array_filter($allowsPerUserAgent, function ($item) {
+            return count($item) > 0;
+        });
+        return $allowsPerUserAgent;
     }
 
     protected function isComment(string $line): bool
@@ -254,6 +352,11 @@ class RobotsTxt
     protected function parseDisallow(string $line): string
     {
         return trim(substr_replace(trim($line), '', 0, 8), ': ');
+    }
+
+    protected function parseAllow(string $line): string
+    {
+        return trim(substr_replace(trim($line), '', 0, 6), ': ');
     }
 
     protected function isDisallowLine(string $line): string

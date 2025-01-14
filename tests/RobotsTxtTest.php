@@ -229,4 +229,36 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/fr/admin?test', 'UserAgent013'));
         $this->assertFalse($robots->allows('/es/admin-disallow/', 'UserAgent013'));
     }
+
+    /** @test */
+    public function it_can_handle_explicit_multiple_allows_after_generic_deny()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
+        $this->assertTrue($robots->allows('/abc/1234/explicit.html'));
+        $this->assertFalse($robots->allows('/abc/1234'));
+        $this->assertFalse($robots->allows('/abc/1234/not_mentioned.html'));
+        $this->assertFalse($robots->allows('/abc/1234/folder/not_mentioned.html'));
+        $this->assertFalse($robots->allows('/abc/1235/folder/not_mentioned.html'));
+    }
+
+    /** @test */
+    /** @test */
+    public function it_can_handle_explicit_multiple_allows_after_generic_deny_for_only_me()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
+        $this->assertTrue($robots->allows('/xyz/1234/explicit.html', 'only-me'));
+        $this->assertFalse($robots->allows('/xyz/1234', 'only-me'));
+        $this->assertFalse($robots->allows('/xyz/1234/not_mentioned.html', 'only-me'));
+        $this->assertFalse($robots->allows('/xyz/1234/folder/not_mentioned.html', 'only-me'));
+        $this->assertFalse($robots->allows('/xyz/1235/folder/not_mentioned.html', 'only-me'));
+    }
+
+    /** @test */
+    public function it_can_handle_weighted_allow()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__ . '/data/robots_weight.txt');
+        $this->assertTrue($robots->allows('/nb/reindrift/', 'only-me'));
+        $this->assertTrue($robots->allows('/sitemap.xml', 'only-me'));
+        $this->assertFalse($robots->allows('/some_random/sub/site', 'only-me'));
+    }
 }
