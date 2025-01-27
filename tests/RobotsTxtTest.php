@@ -256,7 +256,7 @@ class RobotsTxtTest extends TestCase
     /** @test */
     public function it_can_handle_weighted_allow()
     {
-        $robots = RobotsTxt::readFrom(__DIR__ . '/data/robots_weight.txt');
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots_weight.txt');
         $this->assertTrue($robots->allows('/nb/reindrift/', 'only-me'));
         $this->assertTrue($robots->allows('/sitemap.xml', 'only-me'));
         $this->assertFalse($robots->allows('/some_random/sub/site', 'only-me'));

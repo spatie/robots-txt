@@ -77,7 +77,7 @@ class RobotsTxt
             }
 
             if (isset($parts['query'])) {
-                $requestUri .= '?' . $parts['query'];
+                $requestUri .= '?'.$parts['query'];
             } elseif ($this->hasEmptyQueryString($url)) {
                 $requestUri .= '?';
             }
@@ -85,11 +85,11 @@ class RobotsTxt
 
         $disallowsPerUserAgent = $this->includeGlobalGroup
             ? $this->disallowsPerUserAgent
-            : array_filter($this->disallowsPerUserAgent, fn($key) => $key !== '*', ARRAY_FILTER_USE_KEY);
+            : array_filter($this->disallowsPerUserAgent, fn ($key) => $key !== '*', ARRAY_FILTER_USE_KEY);
 
         $allowsPerUserAgent = $this->includeGlobalGroup
             ? $this->allowsPerUserAgent
-            : array_filter($this->allowsPerUserAgent, fn($key) => $key !== '*', ARRAY_FILTER_USE_KEY);
+            : array_filter($this->allowsPerUserAgent, fn ($key) => $key !== '*', ARRAY_FILTER_USE_KEY);
 
         $normalizedUserAgent = strtolower(trim($userAgent ?? ''));
 
@@ -116,7 +116,7 @@ class RobotsTxt
             return $isAllowedWeight > $isDisallowedWeight;
         }
 
-        return !$isDenied;
+        return ! $isDenied;
     }
 
     protected function pathMatchWeight(string $requestUri, array $itemsPerUseragent): int
@@ -125,9 +125,10 @@ class RobotsTxt
         foreach ($itemsPerUseragent as $item => $strlen) {
             $startsWith = str_starts_with($requestUri, $item);
             if ($startsWith && $strlen > $weight) {
-                $weight = (int)$strlen;
+                $weight = (int) $strlen;
             }
         }
+
         return $weight;
     }
 
@@ -156,7 +157,6 @@ class RobotsTxt
         return in_array($requestUri, array_keys($allows));
     }
 
-
     protected function pathIsDenied(string $requestUri, array $disallows): bool
     {
         foreach ($disallows as $disallow => $value) {
@@ -176,7 +176,7 @@ class RobotsTxt
             $disallowRegexp = preg_quote($disallow, '/');
 
             // the pattern must start at the beginning of the string...
-            $disallowRegexp = '^' . $disallowRegexp;
+            $disallowRegexp = '^'.$disallowRegexp;
 
             // ...and optionally stop at the end of the string
             if ($stopAtEndOfString) {
@@ -187,7 +187,7 @@ class RobotsTxt
             $disallowRegexp = str_replace('\\*', '.*', $disallowRegexp);
 
             // enclose in delimiters
-            $disallowRegexp = '/' . $disallowRegexp . '/';
+            $disallowRegexp = '/'.$disallowRegexp.'/';
 
             if (preg_match($disallowRegexp, $requestUri) === 1) {
                 return true;
@@ -308,12 +308,12 @@ class RobotsTxt
 
             if ($this->isDisallowLine($line)) {
                 $treatAllowDisallowLine = true;
+
                 continue;
             }
 
             if ($this->isAllowLine($line)) {
                 $treatAllowDisallowLine = true;
-
 
             }
 
@@ -326,6 +326,7 @@ class RobotsTxt
         $allowsPerUserAgent = array_filter($allowsPerUserAgent, function ($item) {
             return count($item) > 0;
         });
+
         return $allowsPerUserAgent;
     }
 
