@@ -2,6 +2,19 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.3.0 - 2025-01-27
+
+### What's Changed
+
+* Update phpunit/phpunit requirement from ^9.0|^10.0 to ^11.5.2 by @dependabot in https://github.com/spatie/robots-txt/pull/59
+* "Allow" Handling by @Dwarfex in https://github.com/spatie/robots-txt/pull/60
+
+### New Contributors
+
+* @Dwarfex made their first contribution in https://github.com/spatie/robots-txt/pull/60
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.2.3...2.3.0
+
 ## 2.2.3 - 2024-10-22
 
 ### What's Changed
