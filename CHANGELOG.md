@@ -2,6 +2,19 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.3.1 - 2025-01-31
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.2.0 to 2.3.0 by @dependabot in https://github.com/spatie/robots-txt/pull/62
+* RobotsTxt: add missing class property - allowsPerUserAgent by @DavidGoodwin in https://github.com/spatie/robots-txt/pull/61
+
+### New Contributors
+
+* @DavidGoodwin made their first contribution in https://github.com/spatie/robots-txt/pull/61
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.3.0...2.3.1
+
 ## 2.3.0 - 2025-01-27
 
 ### What's Changed
