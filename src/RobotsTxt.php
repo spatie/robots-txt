@@ -7,6 +7,7 @@ class RobotsTxt
     protected static array $robotsCache = [];
 
     protected array $disallowsPerUserAgent = [];
+    protected array $allowsPerUserAgent = [];
 
     protected bool $matchExactly = true;
 
