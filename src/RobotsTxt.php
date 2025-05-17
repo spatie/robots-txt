@@ -10,6 +10,8 @@ class RobotsTxt
 
     protected array $allowsPerUserAgent = [];
 
+    protected array $crawlDelaysPerUserAgent = [];
+
     protected bool $matchExactly = true;
 
     protected bool $includeGlobalGroup = true;
@@ -53,6 +55,7 @@ class RobotsTxt
     {
         $this->disallowsPerUserAgent = $this->getDisallowsPerUserAgent($content);
         $this->allowsPerUserAgent = $this->getAllowsPerUserAgent($content);
+        $this->crawlDelaysPerUserAgent = $this->getCrawlDelaysPerUserAgent($content);
     }
 
     public static function create(string $source): self
@@ -119,6 +122,21 @@ class RobotsTxt
         }
 
         return ! $isDenied;
+    }
+
+    public function crawlDelay(string $userAgent = '*'): ?string {
+        $crawlDelaysPerUserAgent = $this->includeGlobalGroup
+            ? $this->crawlDelaysPerUserAgent
+            : array_filter($this->crawlDelaysPerUserAgent, fn ($key) => $key !== '*', ARRAY_FILTER_USE_KEY);
+
+        $normalizedUserAgent = strtolower(trim($userAgent ?? ''));
+
+        if (isset($crawlDelaysPerUserAgent[$normalizedUserAgent])) {
+            return $crawlDelaysPerUserAgent[$normalizedUserAgent];
+        } else if (isset($crawlDelaysPerUserAgent['*'])) {
+            return $crawlDelaysPerUserAgent['*'];
+        }
+        return null;
     }
 
     protected function pathMatchWeight(string $requestUri, array $itemsPerUseragent): int
@@ -332,6 +350,50 @@ class RobotsTxt
         return $allowsPerUserAgent;
     }
 
+    private function getCrawlDelaysPerUserAgent(string $content): array {
+        $lines = explode(PHP_EOL, $content);
+
+        $lines = array_filter($lines);
+
+        $crawlDelaysPerUserAgent = [];
+
+        $currentUserAgents = [];
+        $isUserAgentListGoing = false;
+
+        foreach ($lines as $line) {
+            if ($this->isComment($line)) {
+                continue;
+            }
+
+            if ($this->isEmptyLine($line)) {
+                continue;
+            }
+
+            if ($this->isUserAgentLine($line)) {
+                if (!$isUserAgentListGoing) {
+                    $isUserAgentListGoing = true;
+                    $currentUserAgents = [];
+                }
+                $userAgent = $this->parseUserAgent($line);
+
+                $currentUserAgents[] = $userAgent;
+
+                continue;
+            }
+            $isUserAgentListGoing = false;
+
+            if ($this->isCrawlDelayLine($line)) {
+                $crawlDelay = $this->parseCrawlDelay($line);
+                foreach ($currentUserAgents as $currentUserAgent) {
+                    $crawlDelaysPerUserAgent[$currentUserAgent] = $crawlDelay;
+                }
+            }
+
+        }
+
+        return $crawlDelaysPerUserAgent;
+    }
+
     protected function isComment(string $line): bool
     {
         return strpos(trim($line), '#') === 0;
@@ -362,6 +424,11 @@ class RobotsTxt
         return trim(substr_replace(trim($line), '', 0, 6), ': ');
     }
 
+    protected function parseCrawlDelay(string $line): string
+    {
+        return trim(substr_replace(trim($line), '', 0, 11), ': ');
+    }
+
     protected function isDisallowLine(string $line): string
     {
         return trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 8), ': ') === 'disallow';
@@ -370,5 +437,10 @@ class RobotsTxt
     protected function isAllowLine(string $line): string
     {
         return trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 6), ': ') === 'allow';
+    }
+
+    protected function isCrawlDelayLine(string $line): string
+    {
+        return trim(substr(str_replace(' ', '', strtolower(trim($line))), 0, 11), ': ') === 'crawl-delay';
     }
 }
