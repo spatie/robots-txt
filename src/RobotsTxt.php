@@ -350,7 +350,7 @@ class RobotsTxt
         return $allowsPerUserAgent;
     }
 
-    private function getCrawlDelaysPerUserAgent(string $content): array {
+    protected function getCrawlDelaysPerUserAgent(string $content): array {
         $lines = explode(PHP_EOL, $content);
 
         $lines = array_filter($lines);
