@@ -323,5 +323,4 @@ class RobotsTxtTest extends TestCase
         ');
         $this->assertNull($robots->crawlDelay('*'));
     }
-
 }

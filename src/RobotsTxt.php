@@ -124,7 +124,8 @@ class RobotsTxt
         return ! $isDenied;
     }
 
-    public function crawlDelay(string $userAgent = '*'): ?string {
+    public function crawlDelay(string $userAgent = '*'): ?string
+    {
         $crawlDelaysPerUserAgent = $this->includeGlobalGroup
             ? $this->crawlDelaysPerUserAgent
             : array_filter($this->crawlDelaysPerUserAgent, fn ($key) => $key !== '*', ARRAY_FILTER_USE_KEY);
@@ -133,9 +134,10 @@ class RobotsTxt
 
         if (isset($crawlDelaysPerUserAgent[$normalizedUserAgent])) {
             return $crawlDelaysPerUserAgent[$normalizedUserAgent];
-        } else if (isset($crawlDelaysPerUserAgent['*'])) {
+        } elseif (isset($crawlDelaysPerUserAgent['*'])) {
             return $crawlDelaysPerUserAgent['*'];
         }
+
         return null;
     }
 
@@ -350,7 +352,8 @@ class RobotsTxt
         return $allowsPerUserAgent;
     }
 
-    protected function getCrawlDelaysPerUserAgent(string $content): array {
+    protected function getCrawlDelaysPerUserAgent(string $content): array
+    {
         $lines = explode(PHP_EOL, $content);
 
         $lines = array_filter($lines);
@@ -370,7 +373,7 @@ class RobotsTxt
             }
 
             if ($this->isUserAgentLine($line)) {
-                if (!$isUserAgentListGoing) {
+                if (! $isUserAgentListGoing) {
                     $isUserAgentListGoing = true;
                     $currentUserAgents = [];
                 }
