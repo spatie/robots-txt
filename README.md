@@ -31,6 +31,15 @@ $robots = Spatie\Robots\Robots::create();
 $robots->mayIndex('https://www.spatie.be/nl/admin');
 
 $robots->mayFollowOn('https://www.spatie.be/nl/admin');
+
+$robotsTxt = new RobotsTxt('
+  User-agent: *
+  Disallow: /admin
+  Crawl-delay: 1.5
+');
+$robotsTxt->allows('/admin', 'google'); // false
+$robotsTxt->whyDisallows('/admin', 'google')[0]->userAgent; // '*'
+$robotsTxt->crawlDelay('/admin', '*'); // '1.5'
 ```
 
 You can also specify a user agent:
