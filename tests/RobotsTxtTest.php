@@ -413,4 +413,32 @@ class RobotsTxtTest extends TestCase
         $this->assertEquals('/hello', $reasons[0]->basePath);
     }
 
+    /** @test */
+    public function it_can_find_multiple_disallow_reasons_per_user_agent() {
+        $robots = new RobotsTxt(
+            '
+            User-agent: *
+            Disallow: /hello
+            Disallow: /hello-world
+            Disallow: /goodbye
+            
+            User-agent: google
+            Disallow: /hello
+            Disallow: /hello-world
+            Disallow: /hello-kitty
+        '
+        );
+        $reasons = $robots->whyDisallows('/hello-world', 'google');
+        $this->assertNotNull($reasons);
+        $this->assertCount(4, $reasons);
+        $this->assertEquals('google', $reasons[0]->userAgent);
+        $this->assertEquals('/hello', $reasons[0]->basePath);
+        $this->assertEquals('google', $reasons[1]->userAgent);
+        $this->assertEquals('/hello-world', $reasons[1]->basePath);
+        $this->assertEquals('*', $reasons[2]->userAgent);
+        $this->assertEquals('/hello', $reasons[2]->basePath);
+        $this->assertEquals('*', $reasons[3]->userAgent);
+        $this->assertEquals('/hello-world', $reasons[3]->basePath);
+    }
+
 }
