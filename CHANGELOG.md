@@ -2,6 +2,20 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.4.0 - 2025-05-22
+
+### What's Changed
+
+* Bump aglipanci/laravel-pint-action from 2.4 to 2.5 by @dependabot in https://github.com/spatie/robots-txt/pull/63
+* Bump dependabot/fetch-metadata from 2.3.0 to 2.4.0 by @dependabot in https://github.com/spatie/robots-txt/pull/64
+* Implement crawl-delay directive for robots.txt by @gvlasov in https://github.com/spatie/robots-txt/pull/65
+
+### New Contributors
+
+* @gvlasov made their first contribution in https://github.com/spatie/robots-txt/pull/65
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.3.1...2.4.0
+
 ## 2.3.1 - 2025-01-31
 
 ### What's Changed
