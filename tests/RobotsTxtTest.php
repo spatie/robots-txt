@@ -261,4 +261,67 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/sitemap.xml', 'only-me'));
         $this->assertFalse($robots->allows('/some_random/sub/site', 'only-me'));
     }
+
+    /** @test */
+    public function it_can_parse_common_crawl_delay()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots_crawl_delay.txt');
+        $crawlDelay = $robots->crawlDelay('only-me');
+        $this->assertEquals('10', $crawlDelay);
+    }
+
+    /** @test */
+    public function it_can_parse_individual_user_agent_crawl_delay()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots_crawl_delay.txt');
+        $crawlDelay = $robots->crawlDelay('google');
+        $this->assertEquals('5', $crawlDelay);
+    }
+
+    /** @test */
+    public function it_can_parse_fractional_crawl_delay()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots_crawl_delay.txt');
+        $crawlDelay = $robots->crawlDelay('bing');
+        $this->assertEquals('1.5', $crawlDelay);
+    }
+
+    /** @test */
+    public function it_can_apply_crawl_delay_to_multiple_user_agents()
+    {
+        $robots = RobotsTxt::readFrom(__DIR__.'/data/robots_crawl_delay.txt');
+        $this->assertEquals('1.5', $robots->crawlDelay('bing'));
+        $this->assertEquals('1.5', $robots->crawlDelay('yandex'));
+    }
+
+    /** @test */
+    public function it_parses_crawl_delay_directive_case_insensitive()
+    {
+        $robots = new RobotsTxt('
+            User-agent: *
+            CrAwL-dElAy: 2
+        ');
+        $this->assertEquals(2, $robots->crawlDelay('bing'));
+    }
+
+    /** @test */
+    public function it_has_crawl_delay_for_default_user_agent_if_it_is_defined()
+    {
+        $robots = new RobotsTxt('
+            User-agent: *
+            CrAwL-dElAy: 2
+        ');
+        $this->assertEquals(2, $robots->crawlDelay('*'));
+    }
+
+    /** @test */
+    public function it_has_null_crawl_delay_for_default_user_agent_if_it_is_not_defined()
+    {
+        $robots = new RobotsTxt('
+            User-agent: bing
+            CrAwL-dElAy: 2
+        ');
+        $this->assertNull($robots->crawlDelay('*'));
+    }
+
 }
