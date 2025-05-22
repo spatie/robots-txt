@@ -323,4 +323,94 @@ class RobotsTxtTest extends TestCase
         ');
         $this->assertNull($robots->crawlDelay('*'));
     }
+
+    /** @test */
+    public function it_can_tell_why_path_is_disallowed_for_user_agent() {
+        $robots = new RobotsTxt(
+            '
+            User-agent: *
+            Disallow: /hello
+        '
+        );
+        $reasons = $robots->whyDisallows('/hello', 'google');
+        $this->assertNotNull($reasons);
+        $this->assertCount(1, $reasons);
+        $this->assertEquals('*', $reasons[0]->userAgent);
+        $this->assertEquals('/hello', $reasons[0]->basePath);
+    }
+
+    /** @test */
+    public function it_returns_null_for_disallow_reasons_if_path_is_allowed() {
+        $robots = new RobotsTxt(
+            '
+            User-agent: *
+            Disallow: /hello
+        '
+        );
+        $reasons = $robots->whyDisallows('/goodbye', 'google');
+        $this->assertNull($reasons);
+    }
+
+    /** @test */
+    public function it_can_return_multiple_reasons_for_disallow() {
+        $robots = new RobotsTxt(
+            '
+            User-agent: *
+            Disallow: /hello
+            
+            User-agent: google
+            Disallow: /hello
+            
+            User-agent: bing
+            Disallow: /hello-world
+        '
+        );
+        $reasons = $robots->whyDisallows('/hello-world', 'google');
+        $this->assertNotNull($reasons);
+        $this->assertCount(2, $reasons);
+        $this->assertEquals('google', $reasons[0]->userAgent);
+        $this->assertEquals('/hello', $reasons[0]->basePath);
+        $this->assertEquals('*', $reasons[1]->userAgent);
+        $this->assertEquals('/hello', $reasons[1]->basePath);
+    }
+
+    /** @test */
+    public function it_has_disallow_overridden_by_allow_in_reasons() {
+        $robots = new RobotsTxt(
+            '
+            User-agent: *
+            Disallow: /hello
+            
+            User-agent: google
+            Disallow: /hello
+            
+            User-agent: google
+            Allow: /hello-world
+        '
+        );
+        $reasons = $robots->whyDisallows('/hello-world', 'google');
+        $this->assertNull($reasons);
+    }
+
+    /** @test */
+    public function it_finds_disallow_reasons_for_default_user_agent() {
+        $robots = new RobotsTxt(
+            '
+            User-agent: *
+            Disallow: /hello
+            
+            User-agent: google
+            Disallow: /hello
+            
+            User-agent: google
+            Allow: /hello-world
+        '
+        );
+        $reasons = $robots->whyDisallows('/hello-world', '*');
+        $this->assertNotNull($reasons);
+        $this->assertCount(1, $reasons);
+        $this->assertEquals('*', $reasons[0]->userAgent);
+        $this->assertEquals('/hello', $reasons[0]->basePath);
+    }
+
 }
