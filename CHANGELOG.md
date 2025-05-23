@@ -2,6 +2,14 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.5.0 - 2025-05-23
+
+### What's Changed
+
+* Implement RobotsTxt->whyDisallows($path, $userAgent) to find why a path was disallowed by @gvlasov in https://github.com/spatie/robots-txt/pull/66
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.4.0...2.5.0
+
 ## 2.4.0 - 2025-05-22
 
 ### What's Changed
