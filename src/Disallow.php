@@ -7,12 +7,8 @@ namespace Spatie\Robots;
  */
 class Disallow
 {
-
     public function __construct(
         public readonly string $userAgent,
         public readonly string $basePath
-    ) {
-
-    }
-
+    ) {}
 }

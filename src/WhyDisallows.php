@@ -4,12 +4,8 @@ namespace Spatie\Robots;
 
 class WhyDisallows
 {
-
     /**
-     * @param Disallow[] $reasons
+     * @param  Disallow[]  $reasons
      */
-    public function __construct(public readonly array $reasons) {
-
-    }
-
+    public function __construct(public readonly array $reasons) {}
 }

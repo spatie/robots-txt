@@ -325,7 +325,8 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
-    public function it_can_tell_why_path_is_disallowed_for_user_agent() {
+    public function it_can_tell_why_path_is_disallowed_for_user_agent()
+    {
         $robots = new RobotsTxt(
             '
             User-agent: *
@@ -340,7 +341,8 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
-    public function it_returns_null_for_disallow_reasons_if_path_is_allowed() {
+    public function it_returns_null_for_disallow_reasons_if_path_is_allowed()
+    {
         $robots = new RobotsTxt(
             '
             User-agent: *
@@ -352,7 +354,8 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
-    public function it_can_return_multiple_reasons_for_disallow() {
+    public function it_can_return_multiple_reasons_for_disallow()
+    {
         $robots = new RobotsTxt(
             '
             User-agent: *
@@ -375,7 +378,8 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
-    public function it_has_disallow_overridden_by_allow_in_reasons() {
+    public function it_has_disallow_overridden_by_allow_in_reasons()
+    {
         $robots = new RobotsTxt(
             '
             User-agent: *
@@ -393,7 +397,8 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
-    public function it_finds_disallow_reasons_for_default_user_agent() {
+    public function it_finds_disallow_reasons_for_default_user_agent()
+    {
         $robots = new RobotsTxt(
             '
             User-agent: *
@@ -414,7 +419,8 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
-    public function it_can_find_multiple_disallow_reasons_per_user_agent() {
+    public function it_can_find_multiple_disallow_reasons_per_user_agent()
+    {
         $robots = new RobotsTxt(
             '
             User-agent: *
@@ -440,5 +446,4 @@ class RobotsTxtTest extends TestCase
         $this->assertEquals('*', $reasons[3]->userAgent);
         $this->assertEquals('/hello-world', $reasons[3]->basePath);
     }
-
 }
