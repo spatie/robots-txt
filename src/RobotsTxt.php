@@ -124,6 +124,34 @@ class RobotsTxt
         return ! $isDenied;
     }
 
+    /**
+     * @return Disallow[]|null Null if path is allowed, or a list of reasons if path is disallowed
+     */
+    public function whyDisallows(string $path, string $userAgent): ?array {
+        if ($this->allows($path, $userAgent)) {
+            return null;
+        }
+        $reasons = $this->getDisallows($path, $userAgent);
+        if ($userAgent !== '*') {
+            $newDisallows = $this->getDisallows($path, '*');
+            $reasons = array_merge($reasons, $newDisallows);
+        }
+        return $reasons;
+    }
+
+    /**
+     * @return Disallow[]
+     */
+    protected function getDisallows(string $path, string $userAgent): array {
+        $reasons = [];
+        foreach ($this->disallowsPerUserAgent[$userAgent] as $disallowedPath => $length) {
+            if (str_starts_with($path, $disallowedPath)) {
+                $reasons[] = new Disallow($userAgent, $disallowedPath);
+            }
+        }
+        return $reasons;
+    }
+
     public function crawlDelay(string $userAgent = '*'): ?string
     {
         $crawlDelaysPerUserAgent = $this->includeGlobalGroup
