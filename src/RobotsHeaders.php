@@ -8,9 +8,12 @@ class RobotsHeaders
 {
     protected array $robotHeadersProperties = [];
 
-    public static function readFrom(string $source): self
+    /**
+     * @param resource|null $context
+     */
+    public static function readFrom(string $source, $context = null): self
     {
-        $content = @file_get_contents($source);
+        $content = @file_get_contents($source, context: is_resource($context) ? $context : null);
 
         if ($content === false) {
             throw new InvalidArgumentException("Could not read from source `{$source}`");

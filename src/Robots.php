@@ -35,7 +35,10 @@ class Robots
         return new self($userAgent, $source);
     }
 
-    public function mayIndex(string $url, ?string $userAgent = null): bool
+    /**
+     * @param resource|null $context
+     */
+    public function mayIndex(string $url, ?string $userAgent = null, $context = null): bool
     {
         $userAgent = $userAgent ?? $this->userAgent;
 
@@ -45,7 +48,7 @@ class Robots
             return false;
         }
 
-        $content = @file_get_contents($url);
+        $content = @file_get_contents($url, context: is_resource($context) ? $context : null);
 
         if ($content === false) {
             throw new InvalidArgumentException("Could not read url `{$url}`");
@@ -55,9 +58,12 @@ class Robots
             && RobotsHeaders::create($http_response_header ?? [])->mayIndex();
     }
 
-    public function mayFollowOn(string $url): bool
+    /**
+     * @param resource|null $context
+     */
+    public function mayFollowOn(string $url, $context = null): bool
     {
-        $content = @file_get_contents($url);
+        $content = @file_get_contents($url, context: is_resource($context) ? $context : null);
 
         if ($content === false) {
             throw new InvalidArgumentException("Could not read url `{$url}`");

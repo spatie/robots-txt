@@ -73,6 +73,12 @@ app.get('/nl/admin', function (req, res) {
     res.end();
 });
 
+app.get('/client-ua-must-match', function (req, res) {
+    const userAgent = req.headers['user-agent'];
+
+    return res.status(userAgent === 'test-user-agent' ? 200 : 400).end()
+});
+
 var server = app.listen(4020, function () {
     var host = 'localhost';
     var port = server.address().port;

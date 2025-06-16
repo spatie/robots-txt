@@ -46,4 +46,30 @@ class RobotsMetaTest extends TestCase
 
         $this->assertTrue(RobotsMeta::readFrom(__DIR__.'/data/all-allowed.html')->mayFollow());
     }
+
+    /** @test */
+    public function it_can_use_stream_context()
+    {
+        $this->markAsSkippedUnlessLocalTestServerIsRunning();
+
+        // Execute a valid call, not expecting an exception
+        $context = stream_context_create([
+            'http' => [
+                'user_agent' => 'test-user-agent',
+            ]
+        ]);
+
+        RobotsMeta::readFrom($this->getLocalTestServerUrl('/client-ua-must-match'), $context);
+
+        // Execute an invalid call, expecting it to fail, confirming the expected result
+        $context = stream_context_create([
+            'http' => [
+                'user_agent' => 'bad-user-agent',
+            ]
+        ]);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        RobotsMeta::readFrom($this->getLocalTestServerUrl('/client-ua-must-match'), $context);
+    }
 }

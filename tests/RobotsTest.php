@@ -72,4 +72,60 @@ class RobotsTest extends TestCase
 
         $this->assertTrue($robots->mayIndex($this->getLocalTestServerUrl('/nl')));
     }
+
+    /** @test */
+    public function may_index_can_use_stream_context()
+    {
+        $this->markAsSkippedUnlessLocalTestServerIsRunning();
+
+        $robots = Robots::create();
+
+        // Execute a valid call, not expecting an exception
+        $context = stream_context_create([
+            'http' => [
+                'user_agent' => 'test-user-agent',
+            ]
+        ]);
+
+        $robots->mayIndex($this->getLocalTestServerUrl('/client-ua-must-match'), null, $context);
+
+        // Execute an invalid call, expecting it to fail, confirming the expected result
+        $context = stream_context_create([
+            'http' => [
+                'user_agent' => 'bad-user-agent',
+            ]
+        ]);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $robots->mayIndex($this->getLocalTestServerUrl('/client-ua-must-match'), null, $context);
+    }
+
+    /** @test */
+    public function may_follow_on_can_use_stream_context()
+    {
+        $this->markAsSkippedUnlessLocalTestServerIsRunning();
+
+        $robots = Robots::create();
+
+        // Execute a valid call, not expecting an exception
+        $context = stream_context_create([
+            'http' => [
+                'user_agent' => 'test-user-agent',
+            ]
+        ]);
+
+        $robots->mayFollowOn($this->getLocalTestServerUrl('/client-ua-must-match'), $context);
+
+        // Execute an invalid call, expecting it to fail, confirming the expected result
+        $context = stream_context_create([
+            'http' => [
+                'user_agent' => 'bad-user-agent',
+            ]
+        ]);
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $robots->mayFollowOn($this->getLocalTestServerUrl('/client-ua-must-match'), $context);
+    }
 }

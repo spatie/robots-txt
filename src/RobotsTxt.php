@@ -4,8 +4,6 @@ namespace Spatie\Robots;
 
 class RobotsTxt
 {
-    protected static array $robotsCache = [];
-
     protected array $disallowsPerUserAgent = [];
 
     protected array $allowsPerUserAgent = [];
@@ -44,9 +42,12 @@ class RobotsTxt
         return $this;
     }
 
-    public static function readFrom(string $source): self
+    /**
+     * @param resource|null $context
+     */
+    public static function readFrom(string $source, $context = null): self
     {
-        $content = @file_get_contents($source);
+        $content = @file_get_contents($source, context: is_resource($context) ? $context : null);
 
         return new self($content !== false ? $content : '');
     }
