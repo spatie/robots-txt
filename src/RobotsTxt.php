@@ -147,7 +147,7 @@ class RobotsTxt
     protected function getDisallows(string $path, string $userAgent): array
     {
         $reasons = [];
-        foreach ($this->disallowsPerUserAgent[$userAgent] as $disallowedPath => $length) {
+        foreach (array_keys($this->disallowsPerUserAgent[$userAgent] ?? []) as $disallowedPath) {
             if (str_starts_with($path, $disallowedPath)) {
                 $reasons[] = new Disallow($userAgent, $disallowedPath);
             }
@@ -213,7 +213,7 @@ class RobotsTxt
 
     protected function pathIsDenied(string $requestUri, array $disallows): bool
     {
-        foreach ($disallows as $disallow => $value) {
+        foreach (array_keys($disallows) as $disallow) {
             if ($disallow === '') {
                 continue;
             }
