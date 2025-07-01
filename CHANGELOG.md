@@ -2,6 +2,19 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.5.1 - 2025-07-01
+
+### What's Changed
+
+* Bump stefanzweifel/git-auto-commit-action from 5 to 6 by @dependabot in https://github.com/spatie/robots-txt/pull/68
+* fix: fix warnings and avoid unused variables by @chapeupreto in https://github.com/spatie/robots-txt/pull/71
+
+### New Contributors
+
+* @chapeupreto made their first contribution in https://github.com/spatie/robots-txt/pull/71
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.5.0...2.5.1
+
 ## 2.5.0 - 2025-05-23
 
 ### What's Changed
