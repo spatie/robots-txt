@@ -51,7 +51,7 @@ class RobotsTxt
         return new self($content !== false ? $content : '');
     }
 
-    public function __construct(string $content)
+    public function __construct(public readonly string $content)
     {
         $this->disallowsPerUserAgent = $this->getDisallowsPerUserAgent($content);
         $this->allowsPerUserAgent = $this->getAllowsPerUserAgent($content);
