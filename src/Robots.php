@@ -45,7 +45,7 @@ class Robots
             return false;
         }
 
-        $content = @file_get_contents($url);
+        $content = $robotsTxt->content;
 
         if ($content === false) {
             throw new InvalidArgumentException("Could not read url `{$url}`");
