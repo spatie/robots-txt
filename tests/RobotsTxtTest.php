@@ -263,6 +263,33 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
+    public function it_can_handle_star_in_allow_pattern_overriding_disallow()
+    {
+        $robots = new RobotsTxt("User-agent: *\nDisallow: /policies/\nAllow: /*/shipping-policy\n");
+
+        $this->assertTrue($robots->allows('https://example.com/policies/shipping-policy'));
+        $this->assertFalse($robots->allows('https://example.com/policies/refund-policy'));
+    }
+
+    /** @test */
+    public function it_can_handle_leading_star_in_allow_pattern_overriding_disallow()
+    {
+        $robots = new RobotsTxt("User-agent: *\nDisallow: /policies/\nAllow: */policies/shipping-policy\n");
+
+        $this->assertTrue($robots->allows('https://example.com/policies/shipping-policy'));
+        $this->assertFalse($robots->allows('https://example.com/policies/refund-policy'));
+    }
+
+    /** @test */
+    public function it_can_handle_dollar_in_allow_pattern_overriding_disallow()
+    {
+        $robots = new RobotsTxt("User-agent: *\nDisallow: /docs/\nAllow: /docs/index.html$\n");
+
+        $this->assertTrue($robots->allows('https://example.com/docs/index.html'));
+        $this->assertFalse($robots->allows('https://example.com/docs/index.html.bak'));
+    }
+
+    /** @test */
     public function it_can_parse_common_crawl_delay()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots_crawl_delay.txt');

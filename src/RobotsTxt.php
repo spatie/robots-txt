@@ -183,8 +183,7 @@ class RobotsTxt
     {
         $weight = 0;
         foreach ($itemsPerUseragent as $item => $strlen) {
-            $startsWith = str_starts_with($requestUri, $item);
-            if ($startsWith && $strlen > $weight) {
+            if ($strlen > $weight && $this->pathMatchesRule($requestUri, (string) $item)) {
                 $weight = (int) $strlen;
             }
         }
@@ -220,41 +219,46 @@ class RobotsTxt
     protected function pathIsDenied(string $requestUri, array $disallows): bool
     {
         foreach (array_keys($disallows) as $disallow) {
-            if ($disallow === '') {
-                continue;
-            }
-
-            $stopAtEndOfString = false;
-
-            if ($disallow[-1] === '$') {
-                // if the pattern ends with a dollar sign, the string must end there
-                $disallow = substr($disallow, 0, -1);
-                $stopAtEndOfString = true;
-            }
-
-            // convert to regexp
-            $disallowRegexp = preg_quote($disallow, '/');
-
-            // the pattern must start at the beginning of the string...
-            $disallowRegexp = '^'.$disallowRegexp;
-
-            // ...and optionally stop at the end of the string
-            if ($stopAtEndOfString) {
-                $disallowRegexp .= '$';
-            }
-
-            // replace (preg_quote'd) stars with an eager match
-            $disallowRegexp = str_replace('\\*', '.*', $disallowRegexp);
-
-            // enclose in delimiters
-            $disallowRegexp = '/'.$disallowRegexp.'/';
-
-            if (preg_match($disallowRegexp, $requestUri) === 1) {
+            if ($this->pathMatchesRule($requestUri, (string) $disallow)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    protected function pathMatchesRule(string $requestUri, string $rule): bool
+    {
+        if ($rule === '') {
+            return false;
+        }
+
+        $stopAtEndOfString = false;
+
+        if ($rule[-1] === '$') {
+            // if the pattern ends with a dollar sign, the string must end there
+            $rule = substr($rule, 0, -1);
+            $stopAtEndOfString = true;
+        }
+
+        // convert to regexp
+        $ruleRegexp = preg_quote($rule, '/');
+
+        // the pattern must start at the beginning of the string...
+        $ruleRegexp = '^'.$ruleRegexp;
+
+        // ...and optionally stop at the end of the string
+        if ($stopAtEndOfString) {
+            $ruleRegexp .= '$';
+        }
+
+        // replace (preg_quote'd) stars with an eager match
+        $ruleRegexp = str_replace('\\*', '.*', $ruleRegexp);
+
+        // enclose in delimiters
+        $ruleRegexp = '/'.$ruleRegexp.'/';
+
+        return preg_match($ruleRegexp, $requestUri) === 1;
     }
 
     /**
