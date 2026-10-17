@@ -263,6 +263,44 @@ class RobotsTxtTest extends TestCase
     }
 
     /** @test */
+    public function a_longer_allow_with_wildcards_overrides_a_disallow()
+    {
+        $robots = new RobotsTxt("User-agent: *\nDisallow: /policies/\nAllow: /*/shipping-policy\nAllow: */policies/terms-of-service\n");
+
+        $this->assertTrue($robots->allows('https://example.com/policies/shipping-policy'));
+        $this->assertTrue($robots->allows('/policies/terms-of-service'));
+        $this->assertFalse($robots->allows('/policies/refund-policy'));
+    }
+
+    /** @test */
+    public function an_allow_with_an_end_anchor_overrides_a_disallow_only_at_the_end_of_the_path()
+    {
+        $robots = new RobotsTxt("User-agent: *\nDisallow: /files/\nAllow: /files/*.html$\n");
+
+        $this->assertTrue($robots->allows('/files/report.html'));
+        $this->assertFalse($robots->allows('/files/report.html?download=1'));
+        $this->assertFalse($robots->allows('/files/report.pdf'));
+    }
+
+    /** @test */
+    public function a_longer_disallow_with_wildcards_overrides_an_allow()
+    {
+        $robots = new RobotsTxt("User-agent: *\nAllow: /shop/\nDisallow: /shop/*/checkout\n");
+
+        $this->assertTrue($robots->allows('/shop/shoes'));
+        $this->assertFalse($robots->allows('/shop/shoes/checkout'));
+    }
+
+    /** @test */
+    public function an_allow_wins_over_an_equally_long_disallow()
+    {
+        $robots = new RobotsTxt("User-agent: *\nDisallow: /abc\nAllow: /abc\nDisallow: /def/\nAllow: /de*/\n");
+
+        $this->assertTrue($robots->allows('/abcd'));
+        $this->assertTrue($robots->allows('/def/page'));
+    }
+
+    /** @test */
     public function it_can_parse_common_crawl_delay()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots_crawl_delay.txt');
