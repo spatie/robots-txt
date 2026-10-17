@@ -2,6 +2,25 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.5.5 - 2026-10-17
+
+### Fixed
+
+- Allow rules containing wildcards (`*`) or end anchors (`$`) can now override less-specific Disallow rules. Fixes #88.
+- Allow and Disallow specificity now use the same pattern matching, so a longer matching wildcard Disallow also correctly overrides a shorter Allow.
+- Allow wins when matching Allow and Disallow rules have equal lengths, following RFC 9309 section 2.2.2.
+
+### Compatibility note
+
+These corrections can change crawl decisions in either direction: some previously denied URLs become allowed, and some previously allowed URLs become denied. There are no public API or dependency changes.
+
+### Verification
+
+- Full local suite: 57 tests, 172 assertions, no skips or failures.
+- GitHub CI passed on PHP 8.2, 8.3, 8.4, and 8.5.
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.5.4...2.5.5
+
 ## 2.5.4 - 2026-02-25
 
 Send user agent header with file_get_contents requests to prevent Cloudflare and similar WAFs from blocking requests
