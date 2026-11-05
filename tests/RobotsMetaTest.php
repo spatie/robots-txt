@@ -2,11 +2,12 @@
 
 namespace Spatie\Robots\Tests;
 
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\Robots\RobotsMeta;
 
 class RobotsMetaTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function test_noindex()
     {
         $this->assertFalse(RobotsMeta::readFrom(__DIR__.'/data/noindex-nofollow.html')->mayIndex());
@@ -20,7 +21,7 @@ class RobotsMetaTest extends TestCase
         $this->assertTrue(RobotsMeta::readFrom(__DIR__.'/data/all-allowed.html')->mayIndex());
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_exception_on_reading_from_source()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -29,13 +30,13 @@ class RobotsMetaTest extends TestCase
         $robots = RobotsMeta::readFrom('invalid_source');
     }
 
-    /** @test */
+    #[Test]
     public function it_can_create_new_from_source_string()
     {
         $this->assertTrue(RobotsMeta::create('<html></html>')->mayIndex());
     }
 
-    /** @test */
+    #[Test]
     public function test_nofollow()
     {
         $this->assertFalse(RobotsMeta::readFrom(__DIR__.'/data/noindex-nofollow.html')->mayFollow());
