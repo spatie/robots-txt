@@ -2,11 +2,12 @@
 
 namespace Spatie\Robots\Tests;
 
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\Robots\RobotsTxt;
 
 class RobotsTxtTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_can_parse_content()
     {
         $robots = RobotsTxt::create(file_get_contents(__DIR__.'/data/robots.txt'));
@@ -14,7 +15,7 @@ class RobotsTxtTest extends TestCase
         $this->assertInstanceOf(RobotsTxt::class, $robots);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_parse_content_from_a_source()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -22,7 +23,7 @@ class RobotsTxtTest extends TestCase
         $this->assertInstanceOf(RobotsTxt::class, $robots);
     }
 
-    /** @test */
+    #[Test]
     public function test_allowed_link_for_default_user_agent()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -30,7 +31,7 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/'));
     }
 
-    /** @test */
+    #[Test]
     public function test_disallow_keyword_in_url_is_correctly_disallowed()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -38,7 +39,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/es/admin-disallow/', '*'));
     }
 
-    /** @test */
+    #[Test]
     public function test_disallowed_link_for_default_user_agent()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -46,7 +47,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/en/admin/'));
     }
 
-    /** @test */
+    #[Test]
     public function test_allowed_link_for_custom_user_agent()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -74,7 +75,7 @@ class RobotsTxtTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function test_disallowed_link_for_custom_user_agent()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -82,7 +83,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/', 'google'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_an_invalid_robots_txt()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/invalid-robots.txt');
@@ -90,7 +91,7 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_an_empty_robots_txt()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/empty-robots.txt');
@@ -98,7 +99,7 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_star_in_pattern()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -108,7 +109,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/en/admin/users'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_dollar_in_pattern()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -120,7 +121,7 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/fr/admin?test'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_query_strings()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -131,7 +132,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/en/admin?print=true'));
     }
 
-    /** @test */
+    #[Test]
     public function the_allows_user_agent_check_is_case_insensitive()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -140,7 +141,7 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/', strtolower('UserAgent007')));
     }
 
-    /** @test */
+    #[Test]
     public function the_disallows_user_agent_check_is_case_insensitive()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -149,7 +150,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/no-agents', strtolower('UserAgent007')));
     }
 
-    /** @test */
+    #[Test]
     public function the_disallows_uri_check_is_case_sensitive()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -158,7 +159,7 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows(strtolower('/Case-Sensitive/Disallow')));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_multiple_user_agent_query_strings()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -169,7 +170,7 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/en/admin?print=true', 'UserAgent013'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_multiple_user_agent_root_path()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -180,7 +181,7 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/', 'UserAgent013'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_multiple_user_agent_first_in_list()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -192,7 +193,7 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/fr/admin?test', 'UserAgent010'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_multiple_user_agent_last_in_list()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -204,7 +205,7 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/fr/admin?test', 'UserAgent011'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_multiple_user_agent_first_in_list_with_empty_and_comment_lines()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -217,7 +218,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/es/admin-disallow/', 'UserAgent013'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_multiple_user_agent_last_in_list_with_empty_and_comment_line()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -230,7 +231,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/es/admin-disallow/', 'UserAgent013'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_explicit_multiple_allows_after_generic_deny()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -241,8 +242,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/abc/1235/folder/not_mentioned.html'));
     }
 
-    /** @test */
-    /** @test */
+    #[Test]
     public function it_can_handle_explicit_multiple_allows_after_generic_deny_for_only_me()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots.txt');
@@ -253,7 +253,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/xyz/1235/folder/not_mentioned.html', 'only-me'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_handle_weighted_allow()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots_weight.txt');
@@ -262,7 +262,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/some_random/sub/site', 'only-me'));
     }
 
-    /** @test */
+    #[Test]
     public function a_longer_allow_with_wildcards_overrides_a_disallow()
     {
         $robots = new RobotsTxt("User-agent: *\nDisallow: /policies/\nAllow: /*/shipping-policy\nAllow: */policies/terms-of-service\n");
@@ -272,7 +272,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/policies/refund-policy'));
     }
 
-    /** @test */
+    #[Test]
     public function an_allow_with_an_end_anchor_overrides_a_disallow_only_at_the_end_of_the_path()
     {
         $robots = new RobotsTxt("User-agent: *\nDisallow: /files/\nAllow: /files/*.html$\n");
@@ -282,7 +282,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/files/report.pdf'));
     }
 
-    /** @test */
+    #[Test]
     public function a_longer_disallow_with_wildcards_overrides_an_allow()
     {
         $robots = new RobotsTxt("User-agent: *\nAllow: /shop/\nDisallow: /shop/*/checkout\n");
@@ -291,7 +291,7 @@ class RobotsTxtTest extends TestCase
         $this->assertFalse($robots->allows('/shop/shoes/checkout'));
     }
 
-    /** @test */
+    #[Test]
     public function an_allow_wins_over_an_equally_long_disallow()
     {
         $robots = new RobotsTxt("User-agent: *\nDisallow: /abc\nAllow: /abc\nDisallow: /def/\nAllow: /de*/\n");
@@ -300,7 +300,7 @@ class RobotsTxtTest extends TestCase
         $this->assertTrue($robots->allows('/def/page'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_parse_common_crawl_delay()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots_crawl_delay.txt');
@@ -308,7 +308,7 @@ class RobotsTxtTest extends TestCase
         $this->assertEquals('10', $crawlDelay);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_parse_individual_user_agent_crawl_delay()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots_crawl_delay.txt');
@@ -316,7 +316,7 @@ class RobotsTxtTest extends TestCase
         $this->assertEquals('5', $crawlDelay);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_parse_fractional_crawl_delay()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots_crawl_delay.txt');
@@ -324,7 +324,7 @@ class RobotsTxtTest extends TestCase
         $this->assertEquals('1.5', $crawlDelay);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_apply_crawl_delay_to_multiple_user_agents()
     {
         $robots = RobotsTxt::readFrom(__DIR__.'/data/robots_crawl_delay.txt');
@@ -332,7 +332,7 @@ class RobotsTxtTest extends TestCase
         $this->assertEquals('1.5', $robots->crawlDelay('yandex'));
     }
 
-    /** @test */
+    #[Test]
     public function it_parses_crawl_delay_directive_case_insensitive()
     {
         $robots = new RobotsTxt('
@@ -342,7 +342,7 @@ class RobotsTxtTest extends TestCase
         $this->assertEquals(2, $robots->crawlDelay('bing'));
     }
 
-    /** @test */
+    #[Test]
     public function it_has_crawl_delay_for_default_user_agent_if_it_is_defined()
     {
         $robots = new RobotsTxt('
@@ -352,7 +352,7 @@ class RobotsTxtTest extends TestCase
         $this->assertEquals(2, $robots->crawlDelay('*'));
     }
 
-    /** @test */
+    #[Test]
     public function it_has_null_crawl_delay_for_default_user_agent_if_it_is_not_defined()
     {
         $robots = new RobotsTxt('
@@ -362,7 +362,7 @@ class RobotsTxtTest extends TestCase
         $this->assertNull($robots->crawlDelay('*'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_tell_why_path_is_disallowed_for_user_agent()
     {
         $robots = new RobotsTxt(
@@ -378,7 +378,7 @@ class RobotsTxtTest extends TestCase
         $this->assertEquals('/hello', $reasons[0]->basePath);
     }
 
-    /** @test */
+    #[Test]
     public function it_returns_null_for_disallow_reasons_if_path_is_allowed()
     {
         $robots = new RobotsTxt(
@@ -391,7 +391,7 @@ class RobotsTxtTest extends TestCase
         $this->assertNull($reasons);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_return_multiple_reasons_for_disallow()
     {
         $robots = new RobotsTxt(
@@ -415,7 +415,7 @@ class RobotsTxtTest extends TestCase
         $this->assertEquals('/hello', $reasons[1]->basePath);
     }
 
-    /** @test */
+    #[Test]
     public function it_has_disallow_overridden_by_allow_in_reasons()
     {
         $robots = new RobotsTxt(
@@ -434,7 +434,7 @@ class RobotsTxtTest extends TestCase
         $this->assertNull($reasons);
     }
 
-    /** @test */
+    #[Test]
     public function it_finds_disallow_reasons_for_default_user_agent()
     {
         $robots = new RobotsTxt(
@@ -456,7 +456,7 @@ class RobotsTxtTest extends TestCase
         $this->assertEquals('/hello', $reasons[0]->basePath);
     }
 
-    /** @test */
+    #[Test]
     public function it_can_find_multiple_disallow_reasons_per_user_agent()
     {
         $robots = new RobotsTxt(
