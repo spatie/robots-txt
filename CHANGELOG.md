@@ -2,6 +2,28 @@
 
 All notable changes to `robots-txt` will be documented in this file
 
+## 2.6.0 - 2026-11-06
+
+### Compatibility
+
+- Requires PHP **8.4.1 or higher** (`^8.4.1`). Support for PHP 8.1, 8.2, 8.3, and 8.4.0 has been dropped.
+- Development and contribution tooling now uses PHPUnit **13.4.5 or higher**, replacing PHPUnit 11.
+- No changes to public APIs, runtime dependencies other than the PHP floor, or robots.txt, meta-tag, and header parsing behavior.
+
+### What's changed
+
+- Upgrade PHPUnit to 13, migrate its XML configuration, align the PHP CI matrix with the supported floor, and document local HTTP test setup (#90).
+- Reuse PHPUnit test attributes and PHP 8.6 CI coverage already merged in #91; isolate the source-string test from a live external website using the local HTTP fixture (#92).
+- Preserve the Spatie-hosted README advertisement assets.
+
+### Verification
+
+- Corrected PR head passed all eight checks, including push and pull-request test runs on PHP 8.4, 8.5, and 8.6.
+- Full local suite on PHP 8.4.27: **57 tests, 172 assertions**, no skips or PHPUnit deprecations, with both PHPUnit 13.4.5 and 13.4.6.
+- Composer strict validation, platform requirements, and security audit passed.
+
+**Full Changelog**: https://github.com/spatie/robots-txt/compare/2.5.5...2.6.0
+
 ## 2.5.5 - 2026-10-17
 
 ### Fixed
