@@ -2,11 +2,12 @@
 
 namespace Spatie\Robots\Tests;
 
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\Robots\RobotsHeaders;
 
 class RobotsHeadersTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function it_can_parse_headers()
     {
         $robots = RobotsHeaders::create([
@@ -24,7 +25,7 @@ class RobotsHeadersTest extends TestCase
         $this->assertFalse($robots->mayFollow('other-bot'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_parse_headers_with_none()
     {
         $robots = RobotsHeaders::create([
@@ -56,7 +57,7 @@ class RobotsHeadersTest extends TestCase
         $this->assertFalse($robots->mayFollow('other-bot'));
     }
 
-    /** @test */
+    #[Test]
     public function it_throws_exception_on_reading_source()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -65,7 +66,7 @@ class RobotsHeadersTest extends TestCase
         $robots = RobotsHeaders::readFrom('invalid_source');
     }
 
-    /** @test */
+    #[Test]
     public function it_can_read_response_headers_from_a_server()
     {
         $this->markAsSkippedUnlessLocalTestServerIsRunning();
@@ -76,7 +77,7 @@ class RobotsHeadersTest extends TestCase
         $this->assertFalse($robots->mayFollow());
     }
 
-    /** @test */
+    #[Test]
     public function it_can_read_response_headers_from_a_server_for_a_user_agent()
     {
         $this->markAsSkippedUnlessLocalTestServerIsRunning();

@@ -9,7 +9,7 @@ jobs:
             fail-fast: false
             matrix:
                 os: [ubuntu-latest]
-                php: [8.5, 8.4, 8.3, 8.2]
+                php: ['8.6', '8.5', '8.4', '8.3', '8.2']
                 dependency-version: [prefer-stable]
 
         name: P${{ matrix.php }} - ${{ matrix.dependency-version }} - ${{ matrix.os }}
@@ -34,8 +34,14 @@ jobs:
                     extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
                     coverage: none
 
+            -   name: Verify PHP version
+                env:
+                    EXPECTED_PHP_VERSION: ${{ matrix.php }}
+                run: |
+                    php -r 'echo PHP_VERSION, PHP_EOL; exit(PHP_MAJOR_VERSION . "." . PHP_MINOR_VERSION === getenv("EXPECTED_PHP_VERSION") ? 0 : 1);'
+
             -   name: Install dependencies
                 run: composer update --no-interaction --prefer-source --no-suggest
 
             -   name: Execute tests
-                run: vendor/bin/phpunit
+                run: vendor/bin/phpunit --fail-on-skipped --fail-on-phpunit-deprecation

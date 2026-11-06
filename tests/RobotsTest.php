@@ -2,12 +2,13 @@
 
 namespace Spatie\Robots\Tests;
 
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\Robots\Robots;
 use Spatie\Robots\RobotsTxt;
 
 class RobotsTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function test()
     {
         $robots = Robots::create()
@@ -16,7 +17,7 @@ class RobotsTest extends TestCase
         $this->assertTrue($robots->mayIndex('/'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_be_created_with_a_robots_txt_object()
     {
         $robotsTxt = RobotsTxt::create(__DIR__.'/data/robots.txt');
@@ -26,13 +27,13 @@ class RobotsTest extends TestCase
         $this->assertTrue($robots->mayIndex('/'));
     }
 
-    /** @test */
+    #[Test]
     public function it_return_true_on_source_string()
     {
-        $this->assertTrue((new Robots('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', 'source'))->mayIndex('https://spatie.be'));
+        $this->assertTrue((new Robots('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', 'source'))->mayIndex($this->getLocalTestServerUrl('/nl')));
     }
 
-    /** @test */
+    #[Test]
     public function with_custom_user_agent_in_construct()
     {
         $robots = Robots::create('google')
@@ -41,7 +42,7 @@ class RobotsTest extends TestCase
         $this->assertFalse($robots->mayIndex('/'));
     }
 
-    /** @test */
+    #[Test]
     public function with_custom_user_agent_in_method_call()
     {
         $robots = Robots::create()
@@ -50,7 +51,7 @@ class RobotsTest extends TestCase
         $this->assertFalse($robots->mayIndex('/', 'google'));
     }
 
-    /** @test */
+    #[Test]
     public function test_may_follow()
     {
         $robots = Robots::create()
@@ -59,7 +60,7 @@ class RobotsTest extends TestCase
         $this->assertFalse($robots->mayFollowOn(__DIR__.'/data/noindex-nofollow.html'));
     }
 
-    /** @test */
+    #[Test]
     public function it_can_discover_default_robots_file()
     {
         $this->markAsSkippedUnlessLocalTestServerIsRunning();
