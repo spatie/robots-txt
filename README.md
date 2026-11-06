@@ -17,6 +17,8 @@ We highly appreciate you sending us a postcard from your hometown, mentioning wh
 
 ## Installation
 
+Requires PHP 8.4.1 or higher. PHP 8.1, 8.2, 8.3, and 8.4.0 are no longer supported.
+
 You can install the package via composer:
 
 ```bash
@@ -60,6 +62,13 @@ $robots = Spatie\Robots\Robots::create()
 ```
 
 ### Testing
+
+The test suite uses PHPUnit 13. Start the local HTTP test server in a separate terminal before running the tests:
+
+```bash
+npm install --prefix tests/server
+node tests/server/server.js
+```
 
 ``` bash
 composer test
