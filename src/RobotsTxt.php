@@ -287,7 +287,7 @@ class RobotsTxt
 
     protected function getDisallowsPerUserAgent(string $content): array
     {
-        $lines = explode(PHP_EOL, $content);
+        $lines = $this->splitLines($content);
 
         $lines = array_filter($lines);
 
@@ -340,7 +340,7 @@ class RobotsTxt
 
     protected function getAllowsPerUserAgent(string $content): array
     {
-        $lines = explode(PHP_EOL, $content);
+        $lines = $this->splitLines($content);
 
         $lines = array_filter($lines);
 
@@ -397,7 +397,7 @@ class RobotsTxt
 
     protected function getCrawlDelaysPerUserAgent(string $content): array
     {
-        $lines = explode(PHP_EOL, $content);
+        $lines = $this->splitLines($content);
 
         $lines = array_filter($lines);
 
@@ -440,6 +440,20 @@ class RobotsTxt
         return $crawlDelaysPerUserAgent;
     }
 
+    /**
+     * Split on any line ending (CRLF, LF or CR) and drop comments, which run from "#" to the end of the line.
+     *
+     * @return string[]
+     */
+    protected function splitLines(string $content): array
+    {
+        return array_map(function (string $line): string {
+            $commentStart = strpos($line, '#');
+
+            return $commentStart === false ? $line : substr($line, 0, $commentStart);
+        }, preg_split('/\r\n|\r|\n/', $content));
+    }
+
     protected function isComment(string $line): bool
     {
         return strpos(trim($line), '#') === 0;
@@ -457,22 +471,22 @@ class RobotsTxt
 
     protected function parseUserAgent(string $line): string
     {
-        return trim(str_replace('user-agent', '', strtolower(trim($line))), ': ');
+        return trim(str_replace('user-agent', '', strtolower(trim($line))), ": \t");
     }
 
     protected function parseDisallow(string $line): string
     {
-        return trim(substr_replace(trim($line), '', 0, 8), ': ');
+        return trim(substr_replace(trim($line), '', 0, 8), ": \t");
     }
 
     protected function parseAllow(string $line): string
     {
-        return trim(substr_replace(trim($line), '', 0, 6), ': ');
+        return trim(substr_replace(trim($line), '', 0, 6), ": \t");
     }
 
     protected function parseCrawlDelay(string $line): string
     {
-        return trim(substr_replace(trim($line), '', 0, 11), ': ');
+        return trim(substr_replace(trim($line), '', 0, 11), ": \t");
     }
 
     protected function isDisallowLine(string $line): string

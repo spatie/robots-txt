@@ -484,4 +484,35 @@ class RobotsTxtTest extends TestCase
         $this->assertEquals('*', $reasons[3]->userAgent);
         $this->assertEquals('/hello-world', $reasons[3]->basePath);
     }
+
+    #[Test]
+    public function it_ignores_comments_at_the_end_of_a_line()
+    {
+        $robots = RobotsTxt::create("User-agent: foobot # our crawler\nDisallow: /private # keep out\nAllow: /private/public#ok\n");
+
+        $this->assertFalse($robots->allows('/private', 'foobot'));
+        $this->assertTrue($robots->allows('/private/public', 'foobot'));
+        $this->assertTrue($robots->allows('/other', 'foobot'));
+    }
+
+    #[Test]
+    public function it_allows_tabs_after_the_colon()
+    {
+        $robots = RobotsTxt::create("User-agent:\tfoobot\nDisallow:\t/private\nCrawl-delay:\t5\n");
+
+        $this->assertFalse($robots->allows('/private', 'foobot'));
+        $this->assertEquals('5', $robots->crawlDelay('foobot'));
+    }
+
+    #[Test]
+    public function it_splits_lines_on_any_line_ending()
+    {
+        foreach (["\n", "\r\n", "\r"] as $eol) {
+            $robots = RobotsTxt::create(implode($eol, ['User-agent: foobot', 'Disallow: /private', 'User-agent: barbot', 'Disallow: /']));
+
+            $this->assertFalse($robots->allows('/private', 'foobot'), json_encode($eol));
+            $this->assertTrue($robots->allows('/other', 'foobot'), json_encode($eol));
+            $this->assertFalse($robots->allows('/other', 'barbot'), json_encode($eol));
+        }
+    }
 }
